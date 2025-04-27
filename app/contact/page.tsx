@@ -17,7 +17,7 @@ export default function ContactPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Information */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-emerald-100/20">
+          <div className="bg-white/10 h-fit backdrop-blur-sm rounded-2xl p-8 border border-emerald-100/20">
             <h2 className="text-2xl font-semibold text-emerald-50 mb-8">
               Nos coordonnées
             </h2>
