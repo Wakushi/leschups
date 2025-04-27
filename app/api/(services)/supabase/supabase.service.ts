@@ -6,9 +6,10 @@ export const supabase = createClient(
 )
 
 export enum Collection {
-  SHOWS = "shows",
-  AUDITORIUMS = "auditoriums",
-  SHOW_DATES = "show_dates",
+  SHOWS = "chups_shows",
+  AUDITORIUMS = "chups_auditoriums",
+  SHOW_DATES = "chups_show_dates",
+  USERS = "chups_users",
 }
 
 export class SupabaseService {

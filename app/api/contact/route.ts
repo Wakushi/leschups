@@ -1,4 +1,3 @@
-import { CONTACT_EMAIL } from "@/lib/constants"
 import { sendMail } from "../(services)/mail.service"
 import { NextRequest, NextResponse } from "next/server"
 
@@ -106,7 +105,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     `
 
     await sendMail(
-      CONTACT_EMAIL,
+      process.env.DESTINATION_CONTACT_EMAIL as string,
       `Formulaire de contact: ${subject}`,
       emailContent
     )

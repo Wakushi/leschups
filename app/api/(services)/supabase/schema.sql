@@ -1,5 +1,5 @@
 -- Table: shows
-CREATE TABLE shows (
+CREATE TABLE chups_shows (
   id BIGSERIAL PRIMARY KEY,
   title TEXT NOT NULL,
   image TEXT NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE shows (
 );
 
 -- Table: auditoriums
-CREATE TABLE auditoriums (
+CREATE TABLE chups_auditoriums (
   id BIGSERIAL PRIMARY KEY,
   name TEXT NOT NULL,
   city TEXT NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE auditoriums (
 );
 
 -- Table: show_dates
-CREATE TABLE show_dates (
+CREATE TABLE chups_show_dates (
   id BIGSERIAL PRIMARY KEY,
   show_id BIGINT NOT NULL REFERENCES shows(id) ON DELETE CASCADE,
   date TIMESTAMPTZ NOT NULL,

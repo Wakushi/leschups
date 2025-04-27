@@ -18,8 +18,8 @@ interface UserContextProps {
   user: User | null
   loadingUser: boolean
   setUser: (user: User) => void
-  login: (email: string, password: string) => void
-  logOut: () => void
+  login: (email: string, password: string) => Promise<void>
+  logOut: () => Promise<void>
   loginWithToken: () => Promise<void>
 }
 
@@ -27,11 +27,9 @@ const UserContext = createContext<UserContextProps>({
   user: null,
   loadingUser: false,
   setUser: (user: User) => {},
-  login: (email: string, password: string) => {},
-  logOut: () => {},
-  loginWithToken: () => {
-    return new Promise<void>(() => {})
-  },
+  login: (email: string, password: string) => Promise.resolve(),
+  logOut: () => Promise.resolve(),
+  loginWithToken: () => Promise.resolve(),
 })
 
 export default function UserContextProvider(props: UserContextProviderProps) {
@@ -45,7 +43,7 @@ export default function UserContextProvider(props: UserContextProviderProps) {
   }, [])
 
   async function login(email: string, password: string) {
-    const response = await fetch("api/auth/signin", {
+    const response = await fetch("/api/auth/signin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -84,43 +82,34 @@ export default function UserContextProvider(props: UserContextProviderProps) {
   async function loginWithToken() {
     setLoadingUser(true)
 
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_API_URL}/auth/signin-with-token`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      )
+    const response = await fetch(`/api/auth/signin-with-token`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
 
-      if (!response.ok) {
-        throw new Error("Failed to validate token")
-      }
-
-      const user: User = await response.json()
-      setUser(user)
-    } catch (err) {
-      console.error(err)
-    } finally {
+    if (!response.ok) {
       setLoadingUser(false)
+      return
     }
+
+    const user: User = await response.json()
+
+    setUser(user)
+    setLoadingUser(false)
   }
 
   async function logOut(): Promise<void> {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_API_URL}/auth/logout`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      )
+      const response = await fetch(`/api/auth/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      })
 
       if (!response.ok) {
         throw new Error("Failed to log out")
