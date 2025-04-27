@@ -11,9 +11,7 @@ export default function AgendaSection({
   return (
     <section className="bg-emerald-900 text-white relative overflow-hidden w-auto">
       <div className="flex py-20 px-4 min-h-[100vh] justify-center items-center flex-col gap-2 md:gap-4 relative z-[1]">
-        <h2 className="font-title uppercase text-[3rem] md:text-[2.5rem] lg:text-[2.8rem] text-center leading-[0.9] my-6 drop-shadow-lg">
-          Agenda
-        </h2>
+        <h2 className="title mb-6">Agenda</h2>
         <ShowDateList showDates={showDates} max={2} />
         <Link href="/calendar" className="underline md:text-xl">
           Voir plus de dates

@@ -29,7 +29,7 @@ export default function Header() {
   }
 
   return (
-    <header className="p-3 flex items-center justify-between gap-2 w-full fixed bg-emerald-600/40 backdrop-blur-sm z-10 shadow-sm transition-all duration-300">
+    <header className="p-3 flex items-center justify-between gap-2 w-full fixed  backdrop-blur-sm z-10 shadow-sm transition-all duration-300">
       {/* Logo */}
       <Link href="/">
         <Logo />
