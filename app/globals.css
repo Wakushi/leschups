@@ -124,6 +124,10 @@
   }
 }
 
+button {
+  cursor: pointer;
+}
+
 .title {
   @apply font-title text-4xl lg:text-5xl font-bold text-white;
 }
