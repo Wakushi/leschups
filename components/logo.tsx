@@ -21,9 +21,7 @@ export default function Logo() {
       <div
         className={clsx(
           "font-neucha text-2xl md:text-3xl leading-none",
-          pathname.startsWith("/admin") || pathname.startsWith("/member")
-            ? "text-gray-900"
-            : "text-white"
+          pathname.startsWith("/admin") ? "text-gray-900" : "text-white"
         )}
       >
         LES CHUP'S

@@ -26,9 +26,7 @@ export default function Navlink({
           `font-neucha text-lg xl:text-2xl uppercase drop-shadow-2xl flex justify-between items-center`,
           {
             "text-amber-400": pathname === href,
-            "text-gray-900":
-              pathname !== href &&
-              (pathname.startsWith("/admin") || pathname.startsWith("/member")),
+            "text-gray-900": pathname !== href && pathname.startsWith("/admin"),
             "animated-underline": animated,
           }
         )}

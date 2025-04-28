@@ -133,7 +133,7 @@ function Navigation({
           {renderNavLink("Accueil", "/")}
           {renderNavLink("Réservations", "/admin/bookings")}
           {renderNavLink("Dates", "/admin/show-dates")}
-          {renderNavLink("Documents", "/member/downloads")}
+          {renderNavLink("Documents", "/member/documents")}
           {onLogOut && <LogoutButton logOut={onLogOut} />}
         </>
       )
@@ -142,7 +142,7 @@ function Navigation({
         <>
           {renderNavLink("Accueil", "/")}
           {renderNavLink("Chansons", "/member/songs")}
-          {renderNavLink("Documents", "/member/downloads")}
+          {renderNavLink("Documents", "/member/documents")}
           {onLogOut && <LogoutButton logOut={onLogOut} />}
         </>
       )

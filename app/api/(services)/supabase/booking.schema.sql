@@ -12,7 +12,8 @@ CREATE TABLE chups_bookings (
     cheque BOOLEAN DEFAULT FALSE,
     cash BOOLEAN DEFAULT FALSE,
     comment TEXT,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    confirmed BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE INDEX idx_bookings_show_date_id ON chups_bookings(show_date_id);
