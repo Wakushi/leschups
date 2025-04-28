@@ -154,7 +154,7 @@ function Navigation({
           {renderNavLink("Spectacles", "/shows")}
           {renderNavLink("Contact", "/contact")}
           {renderNavLink("FAQ", "/faq")}
-          {renderNavLink("Login", "/login")}
+          {renderNavLink("Compte", "/login")}
           {renderSocialLinks()}
         </>
       )

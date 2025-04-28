@@ -23,16 +23,20 @@ export default function ShowPoster({
           />
         </div>
       </DialogTrigger>
-      <DialogContent className="max-h-[100vh] rounded overflow-auto p-4">
-        <div className="flex gap-4">
+      <DialogContent className="max-w-[95vw] md:max-w-3xl max-h-[90vh] flex items-center shadow-none border-transparent bg-transparent">
+        <div className="relative w-full h-full flex items-center justify-center rounded overflow-hidden">
           <Image
             src={image}
             alt={title}
             width={0}
             height={0}
-            sizes="100vw"
-            style={{ width: "100%", height: "auto" }}
-            className="rounded"
+            style={{
+              width: "100%",
+              height: "auto",
+              maxHeight: "calc(90vh - 2rem)",
+            }}
+            sizes="(max-width: 768px) 95vw, 48rem"
+            className="rounded object-contain"
           />
         </div>
       </DialogContent>

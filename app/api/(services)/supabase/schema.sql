@@ -18,16 +18,16 @@ CREATE TABLE chups_auditoriums (
 -- Table: show_dates
 CREATE TABLE chups_show_dates (
   id BIGSERIAL PRIMARY KEY,
-  show_id BIGINT NOT NULL REFERENCES shows(id) ON DELETE CASCADE,
+  show_id BIGINT NOT NULL REFERENCES chups_shows(id) ON DELETE CASCADE,
   date TIMESTAMPTZ NOT NULL,
   adult_price NUMERIC NOT NULL,
   child_price NUMERIC NOT NULL,
-  auditorium_id BIGINT NOT NULL REFERENCES auditoriums(id) ON DELETE RESTRICT,
+  auditorium_id BIGINT NOT NULL REFERENCES chups_auditoriums(id) ON DELETE RESTRICT,
   external_booking_url TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 -- Indexes for performance
-CREATE INDEX idx_show_dates_show_id ON show_dates(show_id);
-CREATE INDEX idx_show_dates_auditorium_id ON show_dates(auditorium_id);
-CREATE INDEX idx_show_dates_date ON show_dates(date);
+CREATE INDEX idx_show_dates_show_id ON chups_show_dates(show_id);
+CREATE INDEX idx_show_dates_auditorium_id ON chups_show_dates(auditorium_id);
+CREATE INDEX idx_show_dates_date ON chups_show_dates(date);

@@ -6,6 +6,7 @@ import { ShowDate } from "@/types/show.type"
 import { formatDate, formatTime } from "@/lib/utils"
 import ShowDateAccess from "./show-date-access"
 import { Button } from "@/components/ui/button"
+import BookingModal from "../booking/booking-modal"
 
 export default function ShowDateCard({ showDate }: { showDate: ShowDate }) {
   const { show, auditorium, date, external_booking_url } = showDate
@@ -34,7 +35,7 @@ export default function ShowDateCard({ showDate }: { showDate: ShowDate }) {
             </div>
           </div>
 
-          <div className="flex gap-2 md:gap-3 mt-auto pt-2">
+          <div className="flex gap-2 md:flex-col md:gap-3 mt-auto pt-2">
             <ShowDateAccess locationUrl={location_url} />
             {external_booking_url ? (
               <Button
@@ -51,12 +52,7 @@ export default function ShowDateCard({ showDate }: { showDate: ShowDate }) {
                 </Link>
               </Button>
             ) : (
-              <Button
-                variant="default"
-                className="flex-1 cursor-pointer bg-amber-500 hover:bg-amber-600 transition-colors text-sm md:text-base"
-              >
-                Réserver
-              </Button>
+              <BookingwModal showDate={showDate} />
             )}
           </div>
         </div>

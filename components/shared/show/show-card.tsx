@@ -43,19 +43,25 @@ export default function ShowCard({ show }: ShowCardProps) {
           </div>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl p-0 overflow-hidden">
+      <DialogContent className="max-w-[95vw] md:max-w-3xl max-h-[90vh] flex items-center shadow-none border-transparent bg-transparent">
         <DialogTitle className="sr-only">
           Affiche du spectacle : {show.title}
         </DialogTitle>
-        <Image
-          src={show.image}
-          alt={show.title}
-          width={0}
-          height={0}
-          sizes="100vw"
-          style={{ width: "100%", height: "auto" }}
-          className="w-full h-auto"
-        />
+        <div className="relative w-full h-full flex items-center justify-center rounded overflow-hidden">
+          <Image
+            src={show.image}
+            alt={show.title}
+            width={0}
+            height={0}
+            style={{
+              width: "100%",
+              height: "auto",
+              maxHeight: "calc(90vh - 2rem)",
+            }}
+            sizes="(max-width: 768px) 95vw, 48rem"
+            className="rounded object-contain"
+          />
+        </div>
       </DialogContent>
     </Dialog>
   )

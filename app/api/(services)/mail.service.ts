@@ -1,5 +1,5 @@
 import { CONTACT_EMAIL } from "@/lib/constants"
-import { Booking } from "@/types/booking.type"
+import { ShowDate } from "@/types/show.type"
 import nodemailer from "nodemailer"
 import Mail from "nodemailer/lib/mailer"
 
@@ -27,32 +27,144 @@ export async function sendMail(to: string, subject: string, template: string) {
 export function getBookingTemplate({
   confirmationId,
   email,
-  show,
+  showDate,
   formattedDate,
   totalPrice,
 }: {
   confirmationId: string
   email: string
-  show: Booking
+  showDate: ShowDate
   formattedDate: string
   totalPrice: number
 }): string {
   const confirmUrl = `${process.env.NEXT_PUBLIC_APP_URL}/confirm-booking?id=${confirmationId}&email=${email}`
 
   return `
-  <html>
-    <body>
-      <div style="font-family: Arial, sans-serif; color: #333; text-align: center; padding: 20px; max-width:700px; margin: 0 auto;">
-        <h1 style="color: #1E90FF;">Merci pour votre réservation !</h1>
-        <p>Nous vous confirmons la bonne réception de votre réservation pour le spectacle:</p>
-        <p><strong>${show.show_date.show.title}</strong> du <strong>${formattedDate}</strong> à <strong>${show.show_date.auditorium.city}</strong> (<strong>${show.show_date.auditorium.location_url}</strong>).</p>
-        <p>Nous vous rappelons que le montant (total <strong>${totalPrice}€</strong>) des places sera à régler sur place, en espèces ou chèque.</p>
-        <p>Veuillez cliquer sur le bouton ci-dessous pour confirmer votre réservation :</p>
-        <a href=${confirmUrl} style="background-color: #1E90FF; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 20px;">Confirmer la Réservation</a>
-        <p>À bientôt,</p>
-        <p>La troupe de comédie musicale des Chups</p>
-      </div>
-    </body>
-  </html>
-`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Confirmation de réservation</title>
+        <style>
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            margin: 0;
+            padding: 0;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8fafc;
+          }
+          .header {
+            background-color: #d97706;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+          }
+          .content {
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 0 0 8px 8px;
+          }
+          .field {
+            margin-bottom: 15px;
+          }
+          .label {
+            font-weight: 600;
+            color: #d97706;
+            margin-bottom: 5px;
+          }
+          .value {
+            background-color: #f8fafc;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #e5e7eb;
+          }
+          .button {
+            display: inline-block;
+            background-color: #d97706;
+            color: #fff !important;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin: 20px 0;
+            font-weight: 500;
+          }
+          .button:hover {
+            background-color: #b45309;
+          }
+          .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #6b7280;
+            font-size: 0.875rem;
+          }
+          .note {
+            background-color: #fef3c7;
+            border: 1px solid #fcd34d;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1 style="margin: 0;">Confirmation de réservation</h1>
+          </div>
+          <div class="content">
+            <p>Bonjour,</p>
+            <p>Nous vous confirmons la bonne réception de votre réservation pour le spectacle suivant :</p>
+            
+            <div class="field">
+              <div class="label">Spectacle</div>
+              <div class="value">${showDate.show.title}</div>
+            </div>
+            
+            <div class="field">
+              <div class="label">Date et heure</div>
+              <div class="value">${formattedDate}</div>
+            </div>
+            
+            <div class="field">
+              <div class="label">Lieu</div>
+              <div class="value">
+                ${showDate.auditorium.name}<br>
+                ${showDate.auditorium.city}<br>
+                <a href="${showDate.auditorium.location_url}" style="color: #d97706;">Voir l'itinéraire</a>
+              </div>
+            </div>
+            
+            <div class="field">
+              <div class="label">Montant total</div>
+              <div class="value">${totalPrice}€</div>
+            </div>
+
+            <div class="note">
+              <strong>Important :</strong> Le paiement des places se fera sur place le jour du spectacle, en espèces ou par chèque.
+            </div>
+
+            <p>Pour finaliser votre réservation, veuillez cliquer sur le bouton ci-dessous :</p>
+            
+            <div style="text-align: center;">
+              <a href="${confirmUrl}" class="button">Confirmer ma réservation</a>
+            </div>
+
+            <p>À bientôt,<br>La troupe de comédie musicale des Chups</p>
+          </div>
+          <div class="footer">
+            Cet email a été envoyé automatiquement suite à votre réservation sur le site des Chups
+          </div>
+        </div>
+      </body>
+    </html>
+  `
 }

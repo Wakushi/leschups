@@ -10,7 +10,7 @@ export type BookingInsert = {
   total_price: number
 }
 
-export type Booking = {
+export type Booking = BookingInsert & {
   id: number
   show_date: ShowDate
   status: UserBookingStatus
