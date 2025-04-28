@@ -52,7 +52,7 @@ export default function ShowDateCard({ showDate }: { showDate: ShowDate }) {
                 </Link>
               </Button>
             ) : (
-              <BookingwModal showDate={showDate} />
+              <BookingModal showDate={showDate} />
             )}
           </div>
         </div>

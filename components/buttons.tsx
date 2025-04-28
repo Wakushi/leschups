@@ -1,6 +1,5 @@
 import Link from "next/link"
 import { FaCalendarCheck } from "react-icons/fa"
-import { IoIosLogOut } from "react-icons/io"
 
 function BookButton() {
   return (
@@ -14,16 +13,4 @@ function BookButton() {
   )
 }
 
-function LogoutButton({ logOut }: { logOut: () => void }) {
-  return (
-    <li
-      className={`font-neucha text-lg xl:text-xl uppercase drop-shadow-lg flex justify-between items-center gap-2 cursor-pointer`}
-      onClick={logOut}
-    >
-      <span>Déconnexion</span>
-      <IoIosLogOut className="opacity-40" />
-    </li>
-  )
-}
-
-export { BookButton, LogoutButton }
+export { BookButton }

@@ -1,6 +1,11 @@
+"use client"
+import clsx from "clsx"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
 
 export default function Logo() {
+  const pathname = usePathname()
+
   return (
     <div className="flex items-center gap-2">
       <div className="w-[35px] h-[40px] md:w-[45px] md:h-[50px]">
@@ -13,7 +18,14 @@ export default function Logo() {
           sizes="100vw"
         />
       </div>
-      <div className="font-neucha text-2xl md:text-3xl leading-none">
+      <div
+        className={clsx(
+          "font-neucha text-2xl md:text-3xl leading-none",
+          pathname.startsWith("/admin") || pathname.startsWith("/member")
+            ? "text-gray-900"
+            : "text-white"
+        )}
+      >
         LES CHUP'S
       </div>
     </div>

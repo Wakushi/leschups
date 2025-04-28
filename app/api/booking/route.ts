@@ -2,7 +2,7 @@ import { verifyJWT } from "@/lib/jwt"
 
 import { NextRequest, NextResponse } from "next/server"
 import { getUserByEmail } from "../(services)/user.service"
-import { bookShow } from "../(services)/booking.service"
+import { bookShow, updateBooking } from "../(services)/booking.service"
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,34 +17,30 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// export async function PUT(req: NextRequest, res: NextResponse) {
-//   const isAdmin = await hasAdminRole(req)
-//   if (!isAdmin) {
-//     return NextResponse.json(
-//       {
-//         message: "Unauthorized",
-//       },
-//       {
-//         status: 401,
-//       }
-//     )
-//   }
+export async function PUT(req: NextRequest) {
+  const isAdmin = await hasAdminRole(req)
+  if (!isAdmin) {
+    return NextResponse.json(
+      {
+        message: "Unauthorized",
+      },
+      {
+        status: 401,
+      }
+    )
+  }
 
-//   try {
-//     const body = await req.json()
-//     const { userBooking } = body
-//     const { success, data, error } = await updateUserBooking(userBooking)
+  try {
+    const body = await req.json()
+    const { booking } = body
+    await updateBooking(booking)
 
-//     if (success && data) {
-//       return NextResponse.json(data)
-//     }
-
-//     return NextResponse.json({ error: error })
-//   } catch (error) {
-//     console.log(error)
-//     return NextResponse.json({ error: error })
-//   }
-// }
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.log(error)
+    return NextResponse.json({ error: error })
+  }
+}
 
 // export async function DELETE(req: NextRequest, res: NextResponse) {
 //   const isAdmin = await hasAdminRole(req)

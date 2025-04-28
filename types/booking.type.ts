@@ -12,8 +12,9 @@ export type BookingInsert = {
 
 export type Booking = BookingInsert & {
   id: number
-  show_date: ShowDate
+  show_date?: ShowDate
   status: UserBookingStatus
+  confirmed: boolean
   confirmation_id?: string
   cheque?: boolean
   cash?: boolean

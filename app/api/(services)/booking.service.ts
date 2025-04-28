@@ -1,4 +1,4 @@
-import { UserBookingStatus } from "@/types/booking.type"
+import { Booking, UserBookingStatus } from "@/types/booking.type"
 import { ShowDate } from "@/types/show.type"
 import {
   Collection,
@@ -17,6 +17,28 @@ type BookingPayload = {
   adult_tickets: number
   child_tickets: number
   total_price: number
+}
+
+export async function fetchBookings(): Promise<Booking[]> {
+  const { data, error } = await supabase
+    .from(Collection.BOOKINGS)
+    .select(
+      `
+      *,
+      show_date:${Collection.SHOW_DATES}(
+        *,
+        show:${Collection.SHOWS}(*),
+        auditorium:${Collection.AUDITORIUMS}(*)
+      )
+    `
+    )
+    .order("created_at", { ascending: false })
+
+  if (error) {
+    throw error
+  }
+
+  return data as Booking[]
 }
 
 export async function bookShow(payload: BookingPayload): Promise<void> {
@@ -50,6 +72,7 @@ export async function bookShow(payload: BookingPayload): Promise<void> {
       adult_tickets,
       child_tickets,
       total_price,
+      confirmed: false,
       status: UserBookingStatus.PENDING,
       confirmation_id: uuidv4(),
     }
@@ -83,7 +106,7 @@ export async function confirmBooking(payload: {
 
   const { data, error } = await supabase
     .from(Collection.BOOKINGS)
-    .update({ status: UserBookingStatus.DONE })
+    .update({ confirmed: true })
     .eq("confirmation_id", confirmationId)
     .eq("email", email)
     .single()
@@ -93,4 +116,18 @@ export async function confirmBooking(payload: {
   }
 
   return data
+}
+
+export async function updateBooking(booking: Booking): Promise<void> {
+  delete booking.show_date
+
+  const { error } = await supabase
+    .from(Collection.BOOKINGS)
+    .update(booking)
+    .eq("id", booking.id)
+    .single()
+
+  if (error) {
+    throw error
+  }
 }

@@ -2,7 +2,7 @@
 
 import { useUser } from "@/providers/user-store"
 import Link from "next/link"
-import { FaFacebook, FaInstagram } from "react-icons/fa"
+import { FaFacebook, FaInstagram, FaSignOutAlt } from "react-icons/fa"
 import { User } from "@/types/user.type"
 import { useState } from "react"
 import { IoMdClose } from "react-icons/io"
@@ -10,9 +10,9 @@ import { RxHamburgerMenu } from "react-icons/rx"
 import { Separator } from "@/components/ui/separator"
 import clsx from "clsx"
 import Navlink from "@/components/nav-link"
-import { LogoutButton } from "@/components/buttons"
 import MusicButton from "@/components/music-player"
 import Logo from "../logo"
+import { usePathname } from "next/navigation"
 
 export default function Header() {
   const { user, loadingUser, logOut } = useUser()
@@ -131,8 +131,8 @@ function Navigation({
       return (
         <>
           {renderNavLink("Accueil", "/")}
-          {renderNavLink("Réservations", "/admin/user-bookings")}
-          {renderNavLink("Dates", "/admin/bookings")}
+          {renderNavLink("Réservations", "/admin/bookings")}
+          {renderNavLink("Dates", "/admin/show-dates")}
           {renderNavLink("Documents", "/member/downloads")}
           {onLogOut && <LogoutButton logOut={onLogOut} />}
         </>
@@ -159,4 +159,23 @@ function Navigation({
         </>
       )
   }
+}
+
+function LogoutButton({ logOut }: { logOut: () => void }) {
+  const pathname = usePathname()
+  const isAdmin = pathname.startsWith("/admin")
+  return (
+    <li
+      className={clsx(
+        "font-neucha text-lg xl:text-2xl uppercase drop-shadow-lg flex justify-between items-center gap-2 cursor-pointer",
+        {
+          "text-gray-900": isAdmin,
+        }
+      )}
+      onClick={logOut}
+    >
+      <span>Déconnexion</span>
+      <FaSignOutAlt />
+    </li>
+  )
 }

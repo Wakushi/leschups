@@ -7,13 +7,10 @@ import { confirmBooking } from "../api/(services)/booking.service"
 export default async function ConfirmBookingPage({
   searchParams,
 }: {
-  searchParams?: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   async function validateBooking(): Promise<{ success: boolean }> {
-    const params = (await searchParams) as {
-      id: string
-      email: string
-    }
+    const params = await searchParams
 
     if (!params || !params.id || !params.email) {
       return { success: false }
@@ -21,8 +18,8 @@ export default async function ConfirmBookingPage({
 
     try {
       await confirmBooking({
-        confirmationId: params.id,
-        email: params.email,
+        confirmationId: params.id as string,
+        email: params.email as string,
       })
     } catch (error) {
       console.error(error)
@@ -42,7 +39,7 @@ export default async function ConfirmBookingPage({
             <div className="mb-8">
               <FaExclamationCircle className="mx-auto h-16 w-16 text-red-500" />
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-emerald-900 mb-4">
+            <h1 className="text-3xl font-title md:text-4xl font-bold text-emerald-900 mb-4">
               Une erreur est survenue
             </h1>
             <p className="text-xl text-emerald-800 mb-8">
@@ -62,12 +59,12 @@ export default async function ConfirmBookingPage({
 
   return (
     <div className="min-h-screen bg-emerald-700 pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto flex flex-col items-center justify-center">
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8 md:p-12 border border-emerald-100/20 text-center">
           <div className="mb-8">
             <FaCheckCircle className="mx-auto h-16 w-16 text-emerald-500" />
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-emerald-900 mb-4">
+          <h1 className="text-3xl font-title md:text-4xl font-bold text-emerald-900 mb-4">
             Votre réservation est confirmée !
           </h1>
           <p className="text-xl text-emerald-800 mb-8">
