@@ -63,7 +63,7 @@ export default function BookingModal({
       )
     }
 
-    const { show, auditorium, date, child_price } = showDate
+    const { show, auditorium, date, child_price, time } = showDate
     const { name, city } = auditorium
 
     return (
@@ -80,7 +80,7 @@ export default function BookingModal({
               <div className="flex items-center gap-2 text-amber-700 mb-3">
                 <FiCalendar className="w-5 h-5" />
                 <p className="text-sm font-medium">
-                  {formatDate(date)} • {formatTime(date)}
+                  {formatDate(date)} • {time || formatTime(date)}
                 </p>
               </div>
 

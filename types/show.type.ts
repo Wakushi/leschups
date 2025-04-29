@@ -28,4 +28,5 @@ export type ShowDate = {
   external_booking_url?: string
   show: Show
   auditorium: Auditorium
+  time: string
 }

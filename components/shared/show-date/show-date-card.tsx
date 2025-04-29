@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import BookingModal from "../booking/booking-modal"
 
 export default function ShowDateCard({ showDate }: { showDate: ShowDate }) {
-  const { show, auditorium, date, external_booking_url } = showDate
+  const { show, auditorium, date, external_booking_url, time } = showDate
   const { name, city, location_url } = auditorium
 
   return (
@@ -26,7 +26,7 @@ export default function ShowDateCard({ showDate }: { showDate: ShowDate }) {
             </h2>
             <div className="flex items-center text-amber-600 mb-2 md:mb-3">
               <p className="text-sm md:text-lg font-medium">
-                {formatDate(date)} • {formatTime(date)}
+                {formatDate(date)} • {time || formatTime(date)}
               </p>
             </div>
             <div className="space-y-0.5 md:space-y-1">
