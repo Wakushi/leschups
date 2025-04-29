@@ -30,6 +30,7 @@ export function formatTime(date: Date | string): string {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
+      timeZone: "Europe/Paris",
     })
     .replace(":", "h")
 }
