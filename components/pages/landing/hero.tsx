@@ -1,6 +1,7 @@
+import { Show } from "@/types/show.type"
 import Image from "next/image"
 
-export default function Hero({ show }: { show?: any }) {
+export default function Hero({ show }: { show?: Show }) {
   return (
     <div className="relative p-4 flex items-center justify-center flex-col gap-1 min-h-[100vh] bg-countryside">
       {show ? (
