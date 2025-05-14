@@ -8,9 +8,7 @@ import { BookButton } from "@/components/buttons"
 
 export default async function Home() {
   const showDates = await getAllShowDates()
-
-  console.log(showDates)
-
+  
   return (
     <div>
       <Hero show={showDates[0].show} />

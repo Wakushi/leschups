@@ -15,7 +15,7 @@ import { formatDate } from "@/lib/utils"
 import BookingForm from "./booking-form"
 import ShowPoster from "../poster"
 import clsx from "clsx"
-import { FiCalendar, FiMapPin } from "react-icons/fi"
+import { FiCalendar, FiMapPin, FiUser } from "react-icons/fi"
 import { FaCalendarCheck } from "react-icons/fa"
 
 interface BookingModalProps {
@@ -63,7 +63,7 @@ export default function BookingModal({
       )
     }
 
-    const { show, auditorium, date, child_price, time } = showDate
+    const { show, auditorium, date, adult_price, child_price, time } = showDate
     const { name, city } = auditorium
 
     return (
@@ -90,6 +90,21 @@ export default function BookingModal({
                   <p className="font-semibold">{name}</p>
                   <p className="text-gray-600">{city}</p>
                 </div>
+              </div>
+
+              <div className="flex items-center gap-2 text-gray-700 mt-3">
+                <FiUser className="w-5 h-5" />
+                <p className="text-sm">
+                  <span className="font-semibold">Tarif adulte :</span>{" "}
+                  {adult_price} €
+                  {!!child_price && (
+                    <>
+                      <br />
+                      <span className="font-semibold">Tarif enfant :</span>{" "}
+                      {child_price} €
+                    </>
+                  )}
+                </p>
               </div>
             </div>
           </div>
