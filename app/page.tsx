@@ -8,13 +8,18 @@ import { BookButton } from "@/components/buttons"
 
 export default async function Home() {
   const showDates = await getAllShowDates()
-  
+
+  const availableDates = showDates.filter((show) => {
+    const date = new Date(show.date)
+    return date.getTime() > Date.now()
+  })
+
   return (
     <div>
-      <Hero show={showDates[0].show} />
+      <Hero show={availableDates[0]?.show} />
       <AboutSection />
-      {!!showDates.length && <AgendaSection showDates={showDates} />}
-      {!!showDates.length && <BookButton />}
+      {!!availableDates.length && <AgendaSection showDates={availableDates} />}
+      {!!availableDates.length && <BookButton />}
     </div>
   )
 }
