@@ -35,7 +35,8 @@ export default function TexturedPostcard() {
             impérative...
           </p>
           <p className="mb-4">
-            Rendez-vous à la maison familiale le week-end du 23 et 24 mai 2025
+            Rendez-vous à la maison familiale le week-end du 15 et 16 novembre
+            2025
           </p>
           <div className="mt-auto">
             <p className="text-gray-700 font-medium text-end">
