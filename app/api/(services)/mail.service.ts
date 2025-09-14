@@ -20,8 +20,13 @@ export async function sendMail(to: string, subject: string, template: string) {
     html: template,
   }
 
-  const info = await transporter.sendMail(mailOptions)
-  return info
+  try {
+    const info = await transporter.sendMail(mailOptions)
+    return info
+  } catch (error) {
+    console.error(`Error sending mail to ${to}: ${error}`)
+    throw error
+  }
 }
 
 export function getBookingTemplate({

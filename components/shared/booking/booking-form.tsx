@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button"
 import clsx from "clsx"
 import { ShowDate } from "@/types/show.type"
 import { Loader2 } from "lucide-react"
+import { toast } from "sonner"
 
 const formSchema = z.object({
   firstName: z
@@ -78,7 +79,12 @@ export default function BookingForm({
       if (data.success) {
         setIsSuccess(true)
         bookingForm.reset()
+        return
       }
+
+      toast.error("Une erreur est survenue. Veuillez réessayer.")
+
+      throw data.error
     } catch (error) {
       console.error(error)
       setIsSuccess(false)

@@ -53,13 +53,13 @@ export function DataTable<TData extends Booking, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = useState({})
-  const [showUnconfirmed, setShowUnconfirmed] = useState(false)
+  const [showUnconfirmed, setShowUnconfirmed] = useState(true)
 
   useEffect(() => {
     setColumnFilters([
       {
         id: "confirmed",
-        value: false,
+        value: showUnconfirmed,
       },
     ])
   }, [])
