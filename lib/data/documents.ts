@@ -36,7 +36,7 @@ const dateFiles: DownloadFile[] = [
 const theaterFiles: DownloadFile[] = [
   {
     name: "Le Bal Givré",
-    url: "/documents/bal-givre.pdf",
+    url: "/documents/bal-givre.docx",
   },
 ]
 
