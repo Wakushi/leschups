@@ -35,6 +35,10 @@ const dateFiles: DownloadFile[] = [
 
 const theaterFiles: DownloadFile[] = [
   {
+    name: "Bonheur en famille (Édition Survilliers)",
+    url: "/documents/bonheur-en-famille-survilliers.docx",
+  },
+  {
     name: "Le Bal Givré",
     url: "/documents/bal-givre.docx",
   },
