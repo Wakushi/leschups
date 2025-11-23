@@ -1,23 +1,44 @@
+"use client"
+
 import Link from "next/link"
+import { useParams } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Music } from "lucide-react"
-import { SIMPLE_SONGS } from "@/lib/data/songs"
+import { ArrowLeft, Heart, Music, Users2 } from "lucide-react"
+import { Separator } from "@/components/ui/separator"
+import { StandaloneAudioPlayer } from "@/components/pages/member/song/standalone-audio-player"
+import { VideoPlayer } from "@/components/pages/member/song/video-player"
+import { LyricsSection } from "@/components/pages/member/song/lyrics-section"
+import { SingerBadges } from "@/components/pages/member/song/singer-badges"
+import DownloadButton from "@/components/ui/download-button"
+import { useSongs } from "@/providers/songs-store"
 
-export default async function SongDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { id } = await params
-  const song = SIMPLE_SONGS.find((s) => s.id === id)
+export default function SongDetailPage() {
+  const params = useParams()
+  const { songs, loadingSongs } = useSongs()
+
+  if (loadingSongs) {
+    return (
+      <div className="min-h-screen pt-20 bg-main relative">
+        <div className="container mx-auto px-4 py-8 max-w-5xl">
+          <div className="text-center text-white">Chargement...</div>
+        </div>
+      </div>
+    )
+  }
+
+  const id = params?.id as string
+  const song = songs.find((s) => s.id.toString() === id)
 
   if (!song) {
     return (
       <div className="min-h-screen pt-20 bg-main relative">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <Link href="/member/songs">
-            <Button variant="ghost" className="mb-6">
+            <Button
+              variant="ghost"
+              className="mb-4 md:mb-6 text-white hover:text-main"
+            >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Retour à la liste
             </Button>
@@ -43,44 +64,135 @@ export default async function SongDetailPage({
   }
 
   return (
-    <div className="min-h-screen pt-20 bg-main relative">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="min-h-screen pt-20 bg-main relative pb-12">
+      <div className="container mx-auto px-4 py-6 md:py-8 max-w-5xl">
+        {/* Back Button */}
         <Link href="/member/songs">
-          <Button variant="ghost" className="mb-6">
+          <Button
+            variant="ghost"
+            className="mb-4 md:mb-6 text-white hover:text-main"
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Retour à la liste
           </Button>
         </Link>
 
-        <Card className="bg-white border-emerald-100/20 shadow-md">
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold text-gray-900">
+        {/* Main Card */}
+        <Card className="bg-white border-emerald-100/20 shadow-lg">
+          <CardHeader className="pb-4 md:pb-6">
+            <CardTitle className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               {song.title}
             </CardTitle>
+            <p className="text-lg md:text-xl text-gray-700 font-medium">
+              {song.artist}
+            </p>
+            <SingerBadges
+              singers={song.leads}
+              icon={Users2}
+              label="Leads"
+              iconColor="text-blue-600"
+              labelColor="text-blue-600"
+              badgeBgColor="bg-blue-500/20"
+              badgeHoverColor="hover:bg-blue-500/30"
+              badgeTextColor="text-blue-800"
+            />
+            <SingerBadges
+              singers={song.choirs}
+              icon={Heart}
+              label="Chœur"
+              iconColor="text-red-600"
+              labelColor="text-red-600"
+              badgeBgColor="bg-red-500/20"
+              badgeHoverColor="hover:bg-red-500/30"
+              badgeTextColor="text-red-800"
+            />
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-1">
-                Artiste
-              </h3>
-              <p className="text-lg text-gray-900">{song.artist}</p>
+
+          <CardContent className="flex flex-col gap-4">
+            <div className="flex justify-between gap-4">
+              {/* Main Song Section */}
+              <section className="space-y-6">
+                <SongSection
+                  songUrl={song.audio_url}
+                  title={song.title}
+                  label="Écouter - Lead"
+                />
+                {/* Lead Lyrics */}
+                {song.lyrics_html && (
+                  <>
+                    <LyricsSection
+                      lyricsHtml={song.lyrics_html}
+                      lyricsUrl={song.lyrics_url}
+                      title={song.title}
+                      label="Paroles - Lead"
+                      downloadLabel="Télécharger"
+                    />
+                  </>
+                )}
+              </section>
+
+              {/* Choir Song Section */}
+              <section className="space-y-6">
+                <SongSection
+                  songUrl={song.audio_url_choir_alto}
+                  title={song.title}
+                  label="Écouter - Chœur Alto"
+                />
+
+                <SongSection
+                  songUrl={song.audio_url_choir_sopranes}
+                  title={song.title}
+                  label="Écouter - Chœur Sopranes"
+                />
+
+                {song.lyrics_html_choir && (
+                  <>
+                    <LyricsSection
+                      lyricsHtml={song.lyrics_html_choir}
+                      lyricsUrl={song.lyrics_url_choir}
+                      title={song.title}
+                      label="Paroles - Chœur"
+                      downloadLabel="Télécharger"
+                    />
+                  </>
+                )}
+              </section>
             </div>
 
-            <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-2">
-                Chanteurs ({song.singers.length})
-              </h3>
-              <ul className="list-disc list-inside space-y-1">
-                {song.singers.map((singer, index) => (
-                  <li key={index} className="text-gray-700">
-                    {singer}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <Separator />
+
+            {/* Video Player */}
+            {song.video_url && (
+              <VideoPlayer videoUrl={song.video_url} title={song.title} />
+            )}
           </CardContent>
         </Card>
       </div>
+    </div>
+  )
+}
+
+function SongSection({
+  songUrl,
+  title,
+  label,
+}: {
+  songUrl?: string
+  title: string
+  label: string
+}) {
+  if (!songUrl) return
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+          <Music className="h-4 w-4 text-emerald-600" />
+          <span>{label}</span>
+        </div>
+        <DownloadButton url={songUrl} text="Télécharger MP3" />
+      </div>
+      <StandaloneAudioPlayer audioUrl={songUrl} title={title} />
     </div>
   )
 }

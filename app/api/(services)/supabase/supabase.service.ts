@@ -11,6 +11,7 @@ export enum Collection {
   SHOW_DATES = "chups_show_dates",
   USERS = "chups_users",
   BOOKINGS = "chups_bookings",
+  SONGS = "chups_songs",
 }
 
 export class SupabaseService {
