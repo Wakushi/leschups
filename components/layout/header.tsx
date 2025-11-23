@@ -68,8 +68,9 @@ export default function Header() {
                     user={user}
                     toggleMenu={toggleMobileMenu}
                     onLogOut={handleLogOut}
-                    showSeparator={true}
+                    showSeparator={false}
                     animated={false}
+                    direction="vertical"
                   />
                 </ul>
               </nav>
@@ -87,12 +88,14 @@ function Navigation({
   onLogOut,
   animated = true,
   showSeparator = false,
+  direction = "horizontal",
 }: {
   toggleMenu?: () => void
   onLogOut?: () => void
   user: User | null
   showSeparator?: boolean
   animated?: boolean
+  direction?: "horizontal" | "vertical"
 }) {
   const renderNavLink = (title: string, href: string) => (
     <>
@@ -101,6 +104,7 @@ function Navigation({
         href={href}
         onClick={toggleMenu}
         animated={animated}
+        direction={direction}
       />
       {showSeparator && <Separator />}
     </>

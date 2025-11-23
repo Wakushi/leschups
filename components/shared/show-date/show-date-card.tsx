@@ -40,7 +40,7 @@ export default function ShowDateCard({ showDate }: { showDate: ShowDate }) {
             {external_booking_url ? (
               <Button
                 variant="default"
-                className="flex-1 bg-amber-500 hover:bg-amber-600 text-sm md:text-base h-9 md:h-10"
+                className="flex-1 bg-tertiary hover:bg-tertiary-dark text-sm md:text-base h-9 md:h-10"
               >
                 <Link
                   href={external_booking_url}

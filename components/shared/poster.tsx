@@ -1,5 +1,10 @@
 import Image from "next/image"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 export default function ShowPoster({
   title,
@@ -24,6 +29,7 @@ export default function ShowPoster({
         </div>
       </DialogTrigger>
       <DialogContent className="max-w-[95vw] md:max-w-3xl max-h-[90vh] flex items-center shadow-none border-transparent bg-transparent">
+        <DialogTitle className="sr-only">{title}</DialogTitle>
         <div className="relative w-full h-full flex items-center justify-center rounded overflow-hidden">
           <Image
             src={image}

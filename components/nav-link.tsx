@@ -9,17 +9,22 @@ interface NavlinkProps {
   href: string
   animated?: boolean
   onClick?: () => void
+  direction?: "horizontal" | "vertical"
 }
 export default function Navlink({
   title,
   href,
   animated = true,
   onClick,
+  direction = "horizontal",
 }: NavlinkProps) {
   const pathname = usePathname()
 
   return (
-    <li className="lg:mr-8" onClick={onClick}>
+    <li
+      className={clsx("lg:mr-8", { "mb-3": direction === "vertical" })}
+      onClick={onClick}
+    >
       <Link
         href={href}
         className={clsx(
