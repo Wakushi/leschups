@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getAllSongs, createSong } from "../(services)/songs.service"
-import { writeFile, mkdir } from "fs/promises"
+import {
+  getAllSongs,
+  createSong,
+  getSongById,
+  deleteSong,
+} from "../(services)/songs.service"
+import { writeFile, mkdir, unlink } from "fs/promises"
 import { join } from "path"
 import { existsSync } from "fs"
 import { SongPayload } from "@/types/song.type"
@@ -154,4 +159,72 @@ function generateUniqueFilename(originalName: string): string {
   const nameWithoutExt = originalName.replace(/\.[^/.]+$/, "")
   const sanitizedName = nameWithoutExt.replace(/[^a-zA-Z0-9]/g, "_")
   return `${sanitizedName}_${timestamp}_${randomStr}.${extension}`
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { id } = await req.json()
+
+    if (!id || typeof id !== "number") {
+      return NextResponse.json(
+        { error: "Song ID is required" },
+        { status: 400 }
+      )
+    }
+
+    const song = await getSongById(id)
+
+    if (!song) {
+      return NextResponse.json({ error: "Song not found" }, { status: 404 })
+    }
+
+    const filesToDelete: string[] = []
+
+    if (song.audio_url) {
+      filesToDelete.push(song.audio_url)
+    }
+    if (song.audio_url_choir_alto) {
+      filesToDelete.push(song.audio_url_choir_alto)
+    }
+    if (song.audio_url_choir_sopranes) {
+      filesToDelete.push(song.audio_url_choir_sopranes)
+    }
+    if (song.video_url) {
+      filesToDelete.push(song.video_url)
+    }
+    if (song.lyrics_url) {
+      filesToDelete.push(song.lyrics_url)
+    }
+    if (song.lyrics_url_choir) {
+      filesToDelete.push(song.lyrics_url_choir)
+    }
+
+    for (const filePath of filesToDelete) {
+      try {
+        const relativePath = filePath.startsWith("/")
+          ? filePath.slice(1)
+          : filePath
+        const absolutePath = join(process.cwd(), "public", relativePath)
+
+        if (existsSync(absolutePath)) {
+          await unlink(absolutePath)
+        }
+      } catch (fileError) {
+        console.error(`Failed to delete file ${filePath}:`, fileError)
+      }
+    }
+
+    await deleteSong(id)
+
+    return NextResponse.json({ success: true }, { status: 200 })
+  } catch (error) {
+    console.error("Error deleting song:", error)
+    return NextResponse.json(
+      {
+        error: "Failed to delete song",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    )
+  }
 }

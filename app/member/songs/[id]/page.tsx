@@ -109,7 +109,7 @@ export default function SongDetailPage() {
           </CardHeader>
 
           <CardContent className="flex flex-col gap-4">
-            <div className="flex justify-between gap-4">
+            <div className="flex flex-col md:flex-row justify-between gap-4">
               {/* Main Song Section */}
               <section className="space-y-6">
                 <SongSection

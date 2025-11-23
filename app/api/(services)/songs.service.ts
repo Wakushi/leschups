@@ -19,6 +19,32 @@ export async function getAllSongs(): Promise<Song[]> {
   return songs as Song[]
 }
 
+export async function getSongById(id: number): Promise<Song | null> {
+  const { data, error } = await supabase
+    .from(Collection.SONGS)
+    .select("*")
+    .eq("id", id)
+    .single()
+
+  if (error) {
+    if (error.code === "PGRST116") {
+      // No rows returned
+      return null
+    }
+    throw error
+  }
+
+  const song = {
+    ...data,
+    lyrics_html: data.lyrics_html ? JSON.parse(data.lyrics_html) : null,
+    lyrics_html_choir: data.lyrics_html_choir
+      ? JSON.parse(data.lyrics_html_choir)
+      : null,
+  }
+
+  return song as Song
+}
+
 export async function createSong(
   songData: Omit<SongPayload, "id">
 ): Promise<Song> {
@@ -40,4 +66,10 @@ export async function createSong(
 
   if (error) throw error
   return data as Song
+}
+
+export async function deleteSong(id: number): Promise<void> {
+  const { error } = await supabase.from(Collection.SONGS).delete().eq("id", id)
+
+  if (error) throw error
 }

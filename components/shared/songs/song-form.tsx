@@ -37,7 +37,11 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-export default function SongForm() {
+interface SongFormProps {
+  onSuccess?: () => void
+}
+
+export default function SongForm({ onSuccess }: SongFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const form = useForm<FormValues>({
@@ -120,6 +124,7 @@ export default function SongForm() {
 
       toast.success("Chanson créée avec succès!")
       form.reset()
+      onSuccess?.()
     } catch (error) {
       console.error(error)
       toast.error(
@@ -136,7 +141,7 @@ export default function SongForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-6 max-w-2xl bg-white p-6 rounded-lg shadow-md"
+        className="flex flex-col gap-6"
       >
         <div className="text-start mb-2">
           <h2 className="text-2xl font-bold text-gray-800">
