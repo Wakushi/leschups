@@ -17,7 +17,7 @@ export default async function Home() {
   return (
     <div>
       <Hero show={availableDates[0]?.show} />
-      <AboutSection />
+      {/* <AboutSection /> */}
       {!!availableDates.length && <AgendaSection showDates={availableDates} />}
       {!!availableDates.length && <BookButton />}
     </div>

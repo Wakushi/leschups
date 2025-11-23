@@ -1,5 +1,4 @@
 import Link from "next/link"
-import Image from "next/image"
 import ShowDateList from "@/components/shared/show-date/show-date-list"
 import { ShowDate } from "@/types/show.type"
 
@@ -16,26 +15,6 @@ export default function AgendaSection({
         <Link href="/calendar" className="underline md:text-xl">
           Voir plus de dates
         </Link>
-      </div>
-      <div className="w-[800px] absolute left-[-250px] bottom-[-5%]">
-        <Image
-          src="/images/flowers-left.webp"
-          alt="Flower"
-          width={0}
-          height={0}
-          sizes="100vw"
-          style={{ width: "100%", height: "auto" }}
-        />
-      </div>
-      <div className="w-[800px] absolute right-[-250px] bottom-[-5%]">
-        <Image
-          src="/images/flowers-right.webp"
-          alt="Flower"
-          width={0}
-          height={0}
-          sizes="100vw"
-          style={{ width: "100%", height: "auto" }}
-        />
       </div>
     </section>
   )
