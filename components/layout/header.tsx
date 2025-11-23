@@ -137,6 +137,8 @@ function Navigation({
           {renderNavLink("Accueil", "/")}
           {renderNavLink("Réservations", "/admin/bookings")}
           {renderNavLink("Dates", "/admin/show-dates")}
+          {renderNavLink("Données", "/admin/songs")}
+          {renderNavLink("Chansons", "/member/songs")}
           {renderNavLink("Documents", "/member/documents")}
           {onLogOut && <LogoutButton logOut={onLogOut} />}
         </>

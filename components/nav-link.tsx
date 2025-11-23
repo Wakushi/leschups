@@ -32,6 +32,7 @@ export default function Navlink({
           {
             "underline underline-offset-10": pathname === href,
             "text-gray-900": pathname !== href && pathname.startsWith("/admin"),
+            "text-main": pathname === href && pathname.startsWith("/admin"),
             "animated-underline": pathname !== href && animated,
           }
         )}

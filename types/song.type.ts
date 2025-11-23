@@ -5,13 +5,11 @@ export type Song = {
   leads: string[]
   choirs: string[]
   duration: number
-  part: 1 | 2
-  lyrics_url: string
-  isFavorite: boolean
   isPlaying?: boolean
-  lyrics_html?: { __html: string | TrustedHTML }
-  lyrics_html_choir?: { __html: string | TrustedHTML }
+  lyrics_url?: string // To download as docx/pdf
+  lyrics_html?: { __html: string | TrustedHTML } // Visualize in the app
   lyrics_url_choir?: string
+  lyrics_html_choir?: { __html: string | TrustedHTML }
   audio_url: string
   audio?: HTMLAudioElement
   audio_url_choir_alto?: string
@@ -21,9 +19,18 @@ export type Song = {
   video_url?: string
 }
 
-export type SimpleSong = {
-  id: string
+export interface SongPayload {
+  id: number
   title: string
   artist: string
-  singers: string[]
+  leads: string[]
+  choirs: string[]
+  lyrics_url?: string
+  lyrics_html?: { __html: string | TrustedHTML }
+  lyrics_url_choir?: string
+  lyrics_html_choir?: { __html: string | TrustedHTML }
+  audio_url: string
+  audio_url_choir_alto?: string
+  audio_url_choir_sopranes?: string
+  video_url?: string
 }
