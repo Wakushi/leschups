@@ -55,7 +55,7 @@ export default function Header() {
             {/* Mobile Menu Overlay */}
             <div
               className={clsx(
-                "fixed top-0 left-0 min-w-full min-h-[100vh] bg-emerald-700 flex px-8 py-20 transition-transform duration-300",
+                "fixed top-0 left-0 min-w-full min-h-[100vh] bg-main flex px-8 py-20 transition-transform duration-300",
                 {
                   "transform translate-x-0 opacity-100": isMobileMenuOpen,
                   "transform -translate-x-full opacity-0": !isMobileMenuOpen,
@@ -114,14 +114,14 @@ function Navigation({
         href="https://www.facebook.com/p/Les-Chups-100091876850435/"
         target="_blank"
       >
-        <FaFacebook className="text-2xl mr-8 cursor-pointer hover:text-amber-400" />
+        <FaFacebook className="text-2xl mr-8 cursor-pointer hover:text-tertiary" />
       </Link>
       <Link
         className="drop-shadow-lg"
         href="https://www.instagram.com/chupsles"
         target="_blank"
       >
-        <FaInstagram className="text-2xl mr-8 cursor-pointer hover:text-amber-400" />
+        <FaInstagram className="text-2xl mr-8 cursor-pointer hover:text-tertiary" />
       </Link>
     </div>
   )

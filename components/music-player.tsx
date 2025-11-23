@@ -8,12 +8,12 @@ export default function MusicButton() {
 
   return playing ? (
     <TbMusicPause
-      className="text-2xl mr-8 cursor-pointer hover:text-amber-400 drop-shadow-lg"
+      className="text-2xl mr-8 cursor-pointer hover:text-tertiary drop-shadow-lg"
       onClick={pause}
     />
   ) : (
     <TbMusic
-      className="text-2xl mr-8 cursor-pointer hover:text-amber-400 drop-shadow-lg"
+      className="text-2xl mr-8 cursor-pointer hover:text-tertiary drop-shadow-lg"
       onClick={play}
     />
   )

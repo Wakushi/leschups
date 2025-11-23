@@ -8,7 +8,7 @@ export default function AgendaSection({
   showDates: ShowDate[]
 }) {
   return (
-    <section className="bg-emerald-900 text-white relative overflow-hidden w-auto">
+    <section className="bg-main text-white relative overflow-hidden w-auto">
       <div className="flex py-20 px-4 min-h-[100vh] justify-center items-center flex-col gap-2 md:gap-4 relative z-[1]">
         <h2 className="title mb-6">Agenda</h2>
         <ShowDateList showDates={showDates} max={2} />

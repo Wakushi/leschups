@@ -25,9 +25,9 @@ export default function Navlink({
         className={clsx(
           `font-neucha text-lg xl:text-2xl uppercase drop-shadow-2xl flex justify-between items-center`,
           {
-            "text-amber-400": pathname === href,
+            "underline underline-offset-10": pathname === href,
             "text-gray-900": pathname !== href && pathname.startsWith("/admin"),
-            "animated-underline": animated,
+            "animated-underline": pathname !== href && animated,
           }
         )}
       >

@@ -34,7 +34,7 @@ export default function BookingModal({
     if (isSubmitting) {
       return (
         <div className="flex flex-col items-center justify-center min-h-[200px]">
-          <Loader2 className="w-10 h-10 animate-spin text-amber-600" />
+          <Loader2 className="w-10 h-10 animate-spin text-tertiary" />
           <p className="mt-4 text-xl text-gray-600">
             Envoi de votre réservation...
           </p>
@@ -72,27 +72,27 @@ export default function BookingModal({
           <div className="sticky top-4">
             <ShowPoster title={show.title} image={show.image} />
 
-            <div className="mt-6 bg-amber-100/70 rounded-xl p-6 shadow-sm">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">
+            <div className="mt-6 bg-tertiary-dark rounded-xl p-6 shadow-sm">
+              <h2 className="text-xl font-bold text-white mb-4">
                 {show.title}
               </h2>
 
-              <div className="flex items-center gap-2 text-amber-700 mb-3">
+              <div className="flex items-center gap-2 text-white mb-3">
                 <FiCalendar className="w-5 h-5" />
                 <p className="text-sm font-medium">
                   {formatDate(date)} • {time || formatTime(date)}
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 text-gray-700">
+              <div className="flex items-center gap-2 text-white">
                 <FiMapPin className="w-5 h-5" />
                 <div className="text-sm">
                   <p className="font-semibold">{name}</p>
-                  <p className="text-gray-600">{city}</p>
+                  <p className="text-white">{city}</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 text-gray-700 mt-3">
+              <div className="flex items-center gap-2 text-white mt-3">
                 <FiUser className="w-5 h-5" />
                 <p className="text-sm">
                   <span className="font-semibold">Tarif adulte :</span>{" "}
@@ -150,7 +150,7 @@ export default function BookingModal({
       <DialogTrigger asChild>
         <Button
           className={clsx(
-            "md:w-full flex-1 bg-amber-500 text-white hover:bg-amber-600",
+            "md:w-full flex-1 bg-tertiary text-white hover:bg-tertiary-dark",
             {
               "text-white border border-white min-h-[40px] max-h-[40px] w-[110px] max-w-[200px] mx-auto uppercase font-bold":
                 heroView,

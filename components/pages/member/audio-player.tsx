@@ -39,7 +39,7 @@ export function AudioPlayer({
     <div className="flex items-center gap-4 p-2 px-4 rounded-lg bg-emerald-50 min-w-[200px] md:min-w-[300px]">
       <button
         onClick={onPlayPause}
-        className="h-10 w-10 rounded-full bg-emerald-600 hover:bg-emerald-700 flex items-center justify-center transition-colors"
+        className="h-10 w-10 rounded-full bg-emerald-600 hover:bg-main flex items-center justify-center transition-colors"
       >
         {isPlaying ? (
           <FaPause className="text-white" />

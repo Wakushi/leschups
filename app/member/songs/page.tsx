@@ -107,7 +107,7 @@ export default function SongsPage() {
   }
 
   return (
-    <div className="min-h-screen pt-20 bg-emerald-700 relative">
+    <div className="min-h-screen pt-20 bg-main relative">
       <div className="p-8 md:p-12">
         <div className="max-w-2xl mx-auto mb-8">
           <SearchBar value={searchTerm} onChange={setSearchTerm} />

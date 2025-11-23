@@ -33,7 +33,7 @@ export default async function ConfirmBookingPage({
 
   if (!result.success) {
     return (
-      <div className="min-h-screen bg-emerald-700 pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative">
+      <div className="min-h-screen bg-main pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative">
         <div className="max-w-3xl mx-auto">
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8 md:p-12 border border-emerald-100/20 text-center">
             <div className="mb-8">
@@ -47,7 +47,7 @@ export default async function ConfirmBookingPage({
             </p>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors duration-200"
+              className="inline-flex items-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-main transition-colors duration-200"
             >
               Retour à l'accueil <MdNavigateNext className="text-xl" />
             </Link>
@@ -58,7 +58,7 @@ export default async function ConfirmBookingPage({
   }
 
   return (
-    <div className="min-h-screen bg-emerald-700 pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative">
+    <div className="min-h-screen bg-main pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative">
       <div className="max-w-3xl mx-auto flex flex-col items-center justify-center">
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8 md:p-12 border border-emerald-100/20 text-center">
           <div className="mb-8">
@@ -72,7 +72,7 @@ export default async function ConfirmBookingPage({
           </p>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors duration-200"
+            className="inline-flex items-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-main transition-colors duration-200"
           >
             Retour à l'accueil <MdNavigateNext className="text-xl" />
           </Link>

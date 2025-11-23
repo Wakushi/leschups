@@ -5,6 +5,7 @@ import AboutSection from "@/components/pages/landing/about"
 import AgendaSection from "@/components/pages/landing/agenda"
 import { getAllShowDates } from "./api/(services)/shows.service"
 import { BookButton } from "@/components/buttons"
+import Snow from "@/components/ui/snow"
 
 export default async function Home() {
   const showDates = await getAllShowDates()
@@ -16,6 +17,7 @@ export default async function Home() {
 
   return (
     <div>
+      <Snow />
       <Hero show={availableDates[0]?.show} />
       {/* <AboutSection /> */}
       {!!availableDates.length && <AgendaSection showDates={availableDates} />}

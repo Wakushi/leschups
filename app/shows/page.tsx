@@ -5,7 +5,7 @@ export default async function ShowsPage() {
   const shows = await getAllShows()
 
   return (
-    <div className="min-h-screen bg-emerald-700 pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative">
+    <div className="min-h-screen bg-main pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative">
       <div className="max-w-7xl mx-auto relative">
         <div className="text-center mb-16">
           <h1 className="title mb-6">Nos Spectacles</h1>

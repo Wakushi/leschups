@@ -77,7 +77,7 @@ export default function LoginForm() {
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-amber-600" />
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -96,14 +96,14 @@ export default function LoginForm() {
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-amber-600" />
+              <FormMessage />
             </FormItem>
           )}
         />
 
         <Button
           type="submit"
-          className="bg-amber-500 hover:bg-amber-400 text-white transition-colors duration-200"
+          className="bg-tertiary hover:bg-tertiary-dark text-white transition-colors duration-200"
           disabled={isSubmitting}
         >
           {isSubmitting ? (

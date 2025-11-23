@@ -22,7 +22,7 @@ import {
 
 export default function MemberDownloadsPage() {
   return (
-    <div className="min-h-screen bg-emerald-700 pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative">
+    <div className="min-h-screen bg-main pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative">
       <div className="max-w-7xl mx-auto relative">
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8 md:p-12 border border-emerald-100/20">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

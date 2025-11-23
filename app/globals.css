@@ -44,6 +44,12 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  --color-text-primary: oklch(1 0 0);
+  --color-main: oklch(62.3% 0.214 259.815);
+  --color-second: oklch(80.9% 0.105 251.813);
+  --color-tertiary: oklch(72.3% 0.219 149.579);
+  --color-tertiary-dark: oklch(62.7% 0.194 149.214);
 }
 
 :root {
@@ -140,16 +146,11 @@ li {
   list-style: none;
 }
 
-.bg-countryside {
-  background: no-repeat center url("/images/landscape.avif");
+.bg-hero {
+  background: no-repeat center url("/images/background/hero-bg.webp");
 }
 
-.bg-table {
-  background: no-repeat center url("/images/table.jpeg");
-}
-
-.bg-countryside,
-.bg-table {
+.bg-hero {
   background-size: cover;
 }
 

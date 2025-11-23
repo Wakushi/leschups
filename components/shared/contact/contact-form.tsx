@@ -77,15 +77,15 @@ export default function ContactForm() {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-emerald-50">Nom *</FormLabel>
+                <FormLabel className="text-white">Nom *</FormLabel>
                 <FormControl>
                   <Input
-                    className="bg-white/10 border-emerald-200/20 text-emerald-50 placeholder:text-emerald-200/50 focus:border-emerald-400"
+                    className="bg-white/10 border-emerald-200/20 text-white placeholder:text-emerald-200/50 focus:border-emerald-400"
                     placeholder="Votre nom"
                     {...field}
                   />
                 </FormControl>
-                <FormMessage className="text-amber-300" />
+                <FormMessage className="text-white" />
               </FormItem>
             )}
           />
@@ -94,16 +94,16 @@ export default function ContactForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-emerald-50">Email *</FormLabel>
+                <FormLabel className="text-white">Email *</FormLabel>
                 <FormControl>
                   <Input
-                    className="bg-white/10 border-emerald-200/20 text-emerald-50 placeholder:text-emerald-200/50 focus:border-emerald-400"
+                    className="bg-white/10 border-emerald-200/20 text-white placeholder:text-emerald-200/50 focus:border-emerald-400"
                     placeholder="votre@email.com"
                     type="email"
                     {...field}
                   />
                 </FormControl>
-                <FormMessage className="text-amber-300" />
+                <FormMessage className="text-white" />
               </FormItem>
             )}
           />
@@ -114,15 +114,15 @@ export default function ContactForm() {
           name="subject"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-emerald-50">Sujet</FormLabel>
+              <FormLabel className="text-white">Sujet</FormLabel>
               <FormControl>
                 <Input
-                  className="bg-white/10 border-emerald-200/20 text-emerald-50 placeholder:text-emerald-200/50 focus:border-emerald-400"
+                  className="bg-white/10 border-emerald-200/20 text-white placeholder:text-emerald-200/50 focus:border-emerald-400"
                   placeholder="Sujet de votre message"
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-amber-300" />
+              <FormMessage className="text-white" />
             </FormItem>
           )}
         />
@@ -132,15 +132,15 @@ export default function ContactForm() {
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-emerald-50">Message *</FormLabel>
+              <FormLabel className="text-white">Message *</FormLabel>
               <FormControl>
                 <Textarea
-                  className="bg-white/10 border-emerald-200/20 text-emerald-50 placeholder:text-emerald-200/50 focus:border-emerald-400 min-h-[150px]"
+                  className="bg-white/10 border-emerald-200/20 text-white placeholder:text-emerald-200/50 focus:border-emerald-400 min-h-[150px]"
                   placeholder="Votre message..."
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-amber-300" />
+              <FormMessage className="text-white" />
             </FormItem>
           )}
         />
@@ -151,7 +151,7 @@ export default function ContactForm() {
 
         <Button
           type="submit"
-          className="bg-amber-500 hover:bg-amber-400 text-white transition-colors duration-200"
+          className="bg-tertiary hover:bg-tertiary-dark text-white transition-colors duration-200"
           disabled={isSubmitting}
         >
           {isSubmitting ? (
@@ -159,7 +159,7 @@ export default function ContactForm() {
           ) : (
             <>
               <FaPaperPlane className="w-4 h-4 mr-2" />
-              Envoyer le message
+              Envoyer
             </>
           )}
         </Button>

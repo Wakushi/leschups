@@ -37,7 +37,7 @@ const faqItems = [
 
 export default function FaqPage() {
   return (
-    <div className="min-h-screen bg-emerald-700 pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative">
+    <div className="min-h-screen bg-main pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative">
       <div className="max-w-7xl mx-auto relative">
         <div className="text-center mb-16">
           <h1 className="title mb-6">Questions Fréquentes</h1>
@@ -54,17 +54,17 @@ export default function FaqPage() {
                 value={`item-${index}`}
                 className="bg-white/50 rounded-lg border border-emerald-100/20 drop-shadow-lg"
               >
-                <AccordionTrigger className="px-4 md:px-6 text-base md:text-lg font-medium text-emerald-800">
+                <AccordionTrigger className="px-4 md:px-6 text-base md:text-lg font-medium text-black/90">
                   {item.question}
                 </AccordionTrigger>
-                <AccordionContent className="px-4 md:px-6 text-sm md:text-base text-emerald-700">
+                <AccordionContent className="px-4 md:px-6 text-sm md:text-base text-black/70">
                   {item.answer}
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
 
-          <div className="mt-12 text-center space-y-4 text-emerald-700 text-sm md:text-base">
+          <div className="mt-12 text-center space-y-4 text-black/70 text-sm md:text-base">
             <p>
               Nous espérons que cette FAQ répond à vos questions. Si ce n'est
               pas le cas, n'hésitez pas à nous contacter.

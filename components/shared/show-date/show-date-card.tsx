@@ -13,7 +13,7 @@ export default function ShowDateCard({ showDate }: { showDate: ShowDate }) {
   const { name, city, location_url } = auditorium
 
   return (
-    <Card className="p-3 md:p-6 bg-gradient-to-br from-amber-50 to-amber-100/80 text-gray-800 border-none rounded-lg md:rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-[320px] md:max-w-[580px]">
+    <Card className="p-3 md:p-6 bg-white text-gray-800 border-none rounded-lg md:rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-[320px] md:max-w-[580px]">
       <div className="flex flex-col md:flex-row md:gap-6">
         <div className="w-full md:w-auto mb-4 md:mb-0 flex justify-center items-center">
           <ShowPoster title={show.title} image={show.image} />
@@ -24,7 +24,7 @@ export default function ShowDateCard({ showDate }: { showDate: ShowDate }) {
             <h2 className="text-xl md:text-3xl font-bold text-gray-900 tracking-tight mb-1 md:mb-2 line-clamp-2">
               {show.title}
             </h2>
-            <div className="flex items-center text-amber-600 mb-2 md:mb-3">
+            <div className="flex items-center text-tertiary mb-2 md:mb-3">
               <p className="text-sm md:text-lg font-medium">
                 {formatDate(date)} • {time || formatTime(date)}
               </p>
