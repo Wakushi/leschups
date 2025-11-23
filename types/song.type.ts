@@ -12,3 +12,10 @@ export type Song = {
   isPlaying?: boolean
   lyrics_html?: { __html: string | TrustedHTML }
 }
+
+export type SimpleSong = {
+  id: string
+  title: string
+  artist: string
+  singers: string[]
+}
