@@ -1,4 +1,3 @@
-import TexturedPostcard from "@/components/pages/landing/postcard"
 import Image from "next/image"
 
 export default function AboutSection() {
@@ -15,7 +14,6 @@ export default function AboutSection() {
             sizes="100vw"
           />
         </div>
-        <TexturedPostcard />
       </div>
     </div>
   )
