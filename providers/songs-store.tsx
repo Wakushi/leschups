@@ -28,7 +28,7 @@ const SongsContext = createContext<SongsContextProps>({
 
 export default function SongsContextProvider(props: SongsContextProviderProps) {
   const [songs, setSongs] = useState<Song[]>([])
-  const [loadingSongs, setLoadingSongs] = useState<boolean>(false)
+  const [loadingSongs, setLoadingSongs] = useState<boolean>(true)
 
   useEffect(() => {
     fetchSongs()

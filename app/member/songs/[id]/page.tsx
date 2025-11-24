@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useParams } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Heart, Music, Users2 } from "lucide-react"
+import { ArrowLeft, Heart, Loader2, Music, Users2 } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { StandaloneAudioPlayer } from "@/components/pages/member/song/standalone-audio-player"
 import { VideoPlayer } from "@/components/pages/member/song/video-player"
@@ -20,8 +20,8 @@ export default function SongDetailPage() {
   if (loadingSongs) {
     return (
       <div className="min-h-screen pt-20 bg-main relative">
-        <div className="container mx-auto px-4 py-8 max-w-5xl">
-          <div className="text-center text-white">Chargement...</div>
+        <div className="container mx-auto flex flex-col items-center justify-center gap-4 px-4 py-8 h-[500px] max-w-5xl">
+          <Loader2 className="w-10 h-10 animate-spin text-white mx-auto" />
         </div>
       </div>
     )
@@ -192,7 +192,7 @@ function SongSection({
         </div>
         <DownloadButton url={songUrl} text="Télécharger MP3" />
       </div>
-      <StandaloneAudioPlayer audioUrl={songUrl} title={title} />
+      <StandaloneAudioPlayer audioUrl={songUrl} />
     </div>
   )
 }

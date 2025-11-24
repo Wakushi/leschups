@@ -7,20 +7,19 @@ import { FaPause, FaPlay } from "react-icons/fa"
 import { Music } from "lucide-react"
 
 interface StandaloneAudioPlayerProps {
-  audioUrl?: string
-  title: string
+  audioUrl: string
   label?: string
 }
 
 export function StandaloneAudioPlayer({
   audioUrl,
-  title,
   label,
 }: StandaloneAudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const isSeekingRef = useRef(false)
 
   useEffect(() => {
     if (!audioUrl) return
@@ -33,7 +32,9 @@ export function StandaloneAudioPlayer({
     }
 
     const handleTimeUpdate = () => {
-      setCurrentTime(audio.currentTime)
+      if (!isSeekingRef.current) {
+        setCurrentTime(audio.currentTime)
+      }
     }
 
     const handleEnded = () => {
@@ -67,8 +68,12 @@ export function StandaloneAudioPlayer({
 
   const handleSliderChange = (value: number[]) => {
     if (!audioRef.current) return
+    isSeekingRef.current = true
     audioRef.current.currentTime = value[0]
     setCurrentTime(value[0])
+    setTimeout(() => {
+      isSeekingRef.current = false
+    }, 100)
   }
 
   if (!audioUrl) return null
