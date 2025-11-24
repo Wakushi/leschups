@@ -4,11 +4,17 @@ import ShowDateList from "@/components/shared/show-date/show-date-list"
 export default async function CalendarPage() {
   const showDates = await getAllShowDates()
 
+  console.log(`Fetched ${showDates.length} show dates`)
+  console.log(showDates)
+
   const now = Date.now()
 
-  const formattedShowDates = showDates.filter(
+  const filteredShowDates = showDates.filter(
     (showDate) => new Date(showDate.date) > new Date(now)
   )
+
+  console.log(`Filtered ${filteredShowDates.length} show dates`)
+  console.log(filteredShowDates)
 
   return (
     <div className="min-h-screen bg-gradient-blue pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative">
@@ -22,8 +28,8 @@ export default async function CalendarPage() {
         </div>
 
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8 md:p-12 border border-emerald-100/20">
-          {formattedShowDates.length > 0 ? (
-            <ShowDateList showDates={formattedShowDates} />
+          {filteredShowDates.length > 0 ? (
+            <ShowDateList showDates={filteredShowDates} />
           ) : (
             <div className="text-center py-16">
               <div className="mb-6">
