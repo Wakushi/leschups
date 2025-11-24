@@ -149,7 +149,7 @@ async function saveFile(
   const buffer = Buffer.from(bytes)
 
   await writeFile(filePath, buffer)
-  return `/uploads/${directory}/${filename}`
+  return `/api/uploads/${directory}/${filename}`
 }
 
 function generateUniqueFilename(originalName: string): string {
@@ -201,9 +201,14 @@ export async function DELETE(req: NextRequest) {
 
     for (const filePath of filesToDelete) {
       try {
-        const relativePath = filePath.startsWith("/")
+        let relativePath = filePath.startsWith("/")
           ? filePath.slice(1)
           : filePath
+
+        if (relativePath.startsWith("api/uploads/")) {
+          relativePath = relativePath.replace("api/uploads/", "uploads/")
+        }
+
         const absolutePath = join(process.cwd(), "public", relativePath)
 
         if (existsSync(absolutePath)) {
