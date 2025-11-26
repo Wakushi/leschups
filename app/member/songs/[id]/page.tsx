@@ -1,23 +1,112 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Heart, Loader2, Music, Users2 } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
-import { StandaloneAudioPlayer } from "@/components/pages/member/song/standalone-audio-player"
 import { VideoPlayer } from "@/components/pages/member/song/video-player"
 import { LyricsSection } from "@/components/pages/member/song/lyrics-section"
 import { SingerBadges } from "@/components/pages/member/song/singer-badges"
 import DownloadButton from "@/components/ui/download-button"
 import { useSongs } from "@/providers/songs-store"
+import { SongAudio, SongAudioType } from "@/types/song.type"
+import { getAudioDuration } from "@/lib/utils"
+import { AudioPlayer } from "@/components/pages/member/song/audio-player"
 
 export default function SongDetailPage() {
   const params = useParams()
-  const { songs, loadingSongs } = useSongs()
+  const { getSongById, loadingSongs } = useSongs()
 
-  if (loadingSongs) {
+  const song = getSongById(Number(params?.id))
+
+  const [songAudios, setSongAudios] = useState<SongAudio[]>([])
+  const [playingSong, setPlayingSong] = useState<SongAudio | null>(null)
+
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    async function loadSongsAudio() {
+      setLoading(true)
+
+      if (!song) return
+
+      const loadedSongAudios: SongAudio[] = []
+
+      if (song.audio_url) {
+        const audio = new Audio(song.audio_url)
+        const duration = await getAudioDuration(audio)
+
+        loadedSongAudios.push({
+          audio,
+          audio_url: song.audio_url,
+          duration,
+          isPlaying: false,
+          type: SongAudioType.INSTRUMENTAL,
+        })
+      }
+
+      if (song.audio_url_choir_alto) {
+        const audio = new Audio(song.audio_url_choir_alto)
+        const duration = await getAudioDuration(audio)
+
+        loadedSongAudios.push({
+          audio,
+          audio_url: song.audio_url_choir_alto,
+          duration,
+          isPlaying: false,
+          type: SongAudioType.CHOIR_ALTO,
+        })
+      }
+
+      if (song.audio_url_choir_sopranes) {
+        const audio = new Audio(song.audio_url_choir_sopranes)
+        const duration = await getAudioDuration(audio)
+
+        loadedSongAudios.push({
+          audio,
+          audio_url: song.audio_url_choir_sopranes,
+          duration,
+          isPlaying: false,
+          type: SongAudioType.CHOIR_SOPRANES,
+        })
+      }
+
+      setSongAudios(loadedSongAudios)
+      setLoading(false)
+    }
+
+    loadSongsAudio()
+  }, [])
+
+  function handlePlaySong(songAudio?: SongAudio): void {
+    if (!songAudio) return
+
+    if (playingSong && playingSong.audio) {
+      songAudio.isPlaying = false
+      playingSong.audio.pause()
+    }
+
+    if (songAudio.audio_url === playingSong?.audio_url) {
+      setPlayingSong(null)
+      return
+    }
+
+    if (!songAudio.audio) return
+
+    songAudio.isPlaying = true
+    songAudio.audio.play()
+
+    setPlayingSong(songAudio)
+  }
+
+  function getSongAudio(type: SongAudioType): SongAudio | undefined {
+    return songAudios.find((songAudio) => songAudio.type === type)
+  }
+
+  if (loadingSongs || loading) {
     return (
       <div className="min-h-screen pt-20 bg-main relative">
         <div className="container mx-auto flex flex-col items-center justify-center gap-4 px-4 py-8 h-[500px] max-w-5xl">
@@ -26,9 +115,6 @@ export default function SongDetailPage() {
       </div>
     )
   }
-
-  const id = params?.id as string
-  const song = songs.find((s) => s.id.toString() === id)
 
   if (!song) {
     return (
@@ -113,10 +199,17 @@ export default function SongDetailPage() {
               {/* Main Song Section */}
               <section className="space-y-6">
                 <SongSection
-                  songUrl={song.audio_url}
-                  title={song.title}
+                  songAudio={getSongAudio(SongAudioType.INSTRUMENTAL)}
+                  isPlaying={
+                    playingSong?.type === SongAudioType.INSTRUMENTAL &&
+                    playingSong.isPlaying
+                  }
+                  onPlayPause={() =>
+                    handlePlaySong(getSongAudio(SongAudioType.INSTRUMENTAL))
+                  }
                   label="Écouter - Lead"
                 />
+
                 {/* Lead Lyrics */}
                 {song.lyrics_html && (
                   <>
@@ -134,14 +227,26 @@ export default function SongDetailPage() {
               {/* Choir Song Section */}
               <section className="space-y-6">
                 <SongSection
-                  songUrl={song.audio_url_choir_alto}
-                  title={song.title}
+                  songAudio={getSongAudio(SongAudioType.CHOIR_ALTO)}
+                  isPlaying={
+                    playingSong?.type === SongAudioType.CHOIR_ALTO &&
+                    playingSong.isPlaying
+                  }
+                  onPlayPause={() =>
+                    handlePlaySong(getSongAudio(SongAudioType.CHOIR_ALTO))
+                  }
                   label="Écouter - Chœur Alto"
                 />
 
                 <SongSection
-                  songUrl={song.audio_url_choir_sopranes}
-                  title={song.title}
+                  songAudio={getSongAudio(SongAudioType.CHOIR_SOPRANES)}
+                  isPlaying={
+                    playingSong?.type === SongAudioType.CHOIR_SOPRANES &&
+                    playingSong.isPlaying
+                  }
+                  onPlayPause={() =>
+                    handlePlaySong(getSongAudio(SongAudioType.CHOIR_SOPRANES))
+                  }
                   label="Écouter - Chœur Sopranes"
                 />
 
@@ -173,15 +278,17 @@ export default function SongDetailPage() {
 }
 
 function SongSection({
-  songUrl,
-  title,
+  songAudio,
+  isPlaying,
+  onPlayPause,
   label,
 }: {
-  songUrl?: string
-  title: string
+  songAudio?: SongAudio
+  isPlaying: boolean
+  onPlayPause: () => void
   label: string
 }) {
-  if (!songUrl) return
+  if (!songAudio) return null
 
   return (
     <div className="space-y-3">
@@ -190,9 +297,14 @@ function SongSection({
           <Music className="h-4 w-4 text-emerald-600" />
           <span>{label}</span>
         </div>
-        <DownloadButton url={songUrl} text="Télécharger MP3" />
+        <DownloadButton url={songAudio.audio_url} text="Télécharger MP3" />
       </div>
-      <StandaloneAudioPlayer audioUrl={songUrl} />
+      <AudioPlayer
+        audio={songAudio.audio}
+        isPlaying={isPlaying}
+        onPlayPause={onPlayPause}
+        duration={songAudio.duration}
+      />
     </div>
   )
 }

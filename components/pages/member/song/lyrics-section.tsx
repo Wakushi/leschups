@@ -43,7 +43,7 @@ export function LyricsSection({
         <div
           className="prose prose-sm max-w-none p-4 rounded-lg bg-gray-50 border border-gray-200 text-gray-900"
           dangerouslySetInnerHTML={lyricsHtml}
-        />
+        ></div>
       )}
     </div>
   )

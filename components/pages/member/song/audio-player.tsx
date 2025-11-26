@@ -36,10 +36,10 @@ export function AudioPlayer({
   }
 
   return (
-    <div className="flex items-center gap-4 p-2 px-4 rounded-lg bg-emerald-50 min-w-[200px] md:min-w-[300px]">
+    <div className="flex items-center gap-4 p-2 px-4 rounded-lg bg-slate-900/50 min-w-[200px] md:min-w-[300px]">
       <button
         onClick={onPlayPause}
-        className="h-10 w-10 rounded-full bg-emerald-600 hover:bg-main flex items-center justify-center transition-colors"
+        className="h-10 w-10 rounded-full bg-blue-500 hover:bg-blue-600 flex items-center justify-center transition-colors"
       >
         {isPlaying ? (
           <FaPause className="text-white" />
@@ -55,7 +55,7 @@ export function AudioPlayer({
           className="w-full"
           onValueChange={handleSliderChange}
         />
-        <div className="flex justify-between text-xs text-gray-500 mt-1">
+        <div className="flex justify-between text-xs text-slate-400 mt-1">
           <span>{secondsToMinutes(currentTime)}</span>
           <span>{secondsToMinutes(duration)}</span>
         </div>

@@ -8,7 +8,7 @@ import {
 import { writeFile, mkdir, unlink } from "fs/promises"
 import { join } from "path"
 import { existsSync } from "fs"
-import { SongPayload } from "@/types/song.type"
+import { Song } from "@/types/song.type"
 
 export async function GET() {
   try {
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
       lyricsUrlChoir = await saveFile(lyricsChoirFile, "documents", filename)
     }
 
-    const songData: Omit<SongPayload, "id"> = {
+    const songData: Omit<Song, "id"> = {
       title,
       artist,
       leads,

@@ -17,6 +17,7 @@ interface SongsContextProps {
   loadingSongs: boolean
   setSongs: (songs: Song[]) => void
   fetchSongs: () => Promise<void>
+  getSongById: (id: number) => Song | null
 }
 
 const SongsContext = createContext<SongsContextProps>({
@@ -24,6 +25,7 @@ const SongsContext = createContext<SongsContextProps>({
   loadingSongs: false,
   setSongs: (songs: Song[]) => {},
   fetchSongs: () => Promise.resolve(),
+  getSongById: (id: number) => null,
 })
 
 export default function SongsContextProvider(props: SongsContextProviderProps) {
@@ -56,11 +58,22 @@ export default function SongsContextProvider(props: SongsContextProviderProps) {
     setLoadingSongs(false)
   }
 
+  function getSongById(id: number): Song {
+    const song = songs.find((song) => song.id === id)
+
+    if (!song) {
+      throw new Error(`Song with id ${id} not found`)
+    }
+
+    return song
+  }
+
   const context: SongsContextProps = {
     songs,
     loadingSongs,
     setSongs,
     fetchSongs,
+    getSongById,
   }
 
   return (

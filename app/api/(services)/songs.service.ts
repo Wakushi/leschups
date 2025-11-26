@@ -1,5 +1,5 @@
 import { Collection, supabase } from "./supabase/supabase.service"
-import { Song, SongPayload } from "@/types/song.type"
+import { Song } from "@/types/song.type"
 
 export async function getAllSongs(): Promise<Song[]> {
   const { data, error } = await supabase.from(Collection.SONGS).select(`
@@ -46,7 +46,7 @@ export async function getSongById(id: number): Promise<Song | null> {
 }
 
 export async function createSong(
-  songData: Omit<SongPayload, "id">
+  songData: Omit<Song, "id">
 ): Promise<Song> {
   const insertData: any = {
     ...songData,
