@@ -39,10 +39,19 @@ export async function getAudioDuration(
   audioElement: HTMLAudioElement
 ): Promise<number> {
   return new Promise((resolve) => {
+    const t0 = Date.now()
+
     audioElement.addEventListener("loadedmetadata", () => {
       const durationInMs = audioElement.duration
+      console.log(
+        `Loaded audio (${audioElement.src}) duration in ${Date.now() - t0}ms`
+      )
       resolve(durationInMs || 0)
     })
+
+    setTimeout(() => {
+      resolve(0)
+    }, 5000) // 5 seconds timeout
   })
 }
 

@@ -11,6 +11,7 @@ import {
   Music,
   Video,
   FileText,
+  Edit,
 } from "lucide-react"
 import {
   DropdownMenu,
@@ -30,6 +31,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { SongFormModal } from "./song-form-modal"
 
 export const songColumns: ColumnDef<Song>[] = [
   {
@@ -163,6 +165,7 @@ export const songColumns: ColumnDef<Song>[] = [
       const [loading, setLoading] = useState<boolean>(false)
       const [isDeleteDialogOpen, setIsDeleteDialogOpen] =
         useState<boolean>(false)
+      const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
 
       async function handleDelete(): Promise<void> {
         setLoading(true)
@@ -197,30 +200,45 @@ export const songColumns: ColumnDef<Song>[] = [
 
       return (
         <div className="flex items-center justify-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Ouvrir le menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                className="cursor-pointer text-blue-600 focus:text-blue-600"
+                onSelect={(e) => {
+                  e.preventDefault()
+                  setIsEditDialogOpen(true)
+                }}
+              >
+                <Edit className="h-4 w-4 text-blue-600" />
+                Modifier
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer text-destructive focus:text-destructive"
+                onSelect={(e) => {
+                  e.preventDefault()
+                  setIsDeleteDialogOpen(true)
+                }}
+              >
+                <Trash2 className="h-4 w-4 text-destructive" />
+                Supprimer
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <SongFormModal
+            song={song}
+            open={isEditDialogOpen}
+            onOpenChange={setIsEditDialogOpen}
+          />
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">Ouvrir le menu</span>
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  className="cursor-pointer text-destructive focus:text-destructive"
-                  onSelect={(e) => {
-                    e.preventDefault()
-                    setIsDeleteDialogOpen(true)
-                  }}
-                >
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Supprimer
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle className="text-black">

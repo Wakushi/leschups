@@ -4,6 +4,7 @@ import {
   createSong,
   getSongById,
   deleteSong,
+  updateSong,
 } from "../(services)/songs.service"
 import { writeFile, mkdir, unlink } from "fs/promises"
 import { join } from "path"
@@ -161,6 +162,180 @@ function generateUniqueFilename(originalName: string): string {
   return `${sanitizedName}_${timestamp}_${randomStr}.${extension}`
 }
 
+async function deleteFile(filePath: string): Promise<void> {
+  try {
+    let relativePath = filePath.startsWith("/") ? filePath.slice(1) : filePath
+
+    if (relativePath.startsWith("api/uploads/")) {
+      relativePath = relativePath.replace("api/uploads/", "uploads/")
+    }
+
+    const absolutePath = join(process.cwd(), "public", relativePath)
+
+    if (existsSync(absolutePath)) {
+      await unlink(absolutePath)
+    }
+  } catch (fileError) {
+    console.error(`Failed to delete file ${filePath}:`, fileError)
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const formData = await req.formData()
+
+    const idStr = formData.get("id") as string
+    const id = parseInt(idStr, 10)
+
+    if (!id || isNaN(id)) {
+      return NextResponse.json(
+        { error: "Song ID is required" },
+        { status: 400 }
+      )
+    }
+
+    const existingSong = await getSongById(id)
+
+    if (!existingSong) {
+      return NextResponse.json({ error: "Song not found" }, { status: 404 })
+    }
+
+    const title = formData.get("title") as string
+    const artist = formData.get("artist") as string
+    const leadsStr = formData.get("leads") as string
+    const choirsStr = formData.get("choirs") as string
+    const lyricsHtml = formData.get("lyrics_html") as string | null
+    const lyricsHtmlChoir = formData.get("lyrics_html_choir") as string | null
+
+    const audioFile = formData.get("audio_url") as File | null
+    const audioChoirAltoFile = formData.get(
+      "audio_url_choir_alto"
+    ) as File | null
+    const audioChoirSopranesFile = formData.get(
+      "audio_url_choir_sopranes"
+    ) as File | null
+    const videoFile = formData.get("video_url") as File | null
+    const lyricsFile = formData.get("lyrics_url") as File | null
+    const lyricsChoirFile = formData.get("lyrics_url_choir") as File | null
+
+    if (!title || !artist) {
+      return NextResponse.json(
+        { error: "Title and artist are required" },
+        { status: 400 }
+      )
+    }
+
+    const leads = leadsStr
+      ? leadsStr
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : []
+    const choirs = choirsStr
+      ? choirsStr
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : []
+
+    const updateData: Partial<Omit<Song, "id">> = {
+      title,
+      artist,
+      leads,
+      choirs,
+      lyrics_html: lyricsHtml ? { __html: lyricsHtml } : undefined,
+      lyrics_html_choir: lyricsHtmlChoir
+        ? { __html: lyricsHtmlChoir }
+        : undefined,
+    }
+
+    // Handle audio file update
+    if (audioFile && audioFile.size > 0) {
+      // Delete old file
+      if (existingSong.audio_url) {
+        await deleteFile(existingSong.audio_url)
+      }
+      const audioFilename = generateUniqueFilename(audioFile.name)
+      updateData.audio_url = await saveFile(audioFile, "songs", audioFilename)
+    }
+
+    // Handle choir alto audio file update
+    if (audioChoirAltoFile && audioChoirAltoFile.size > 0) {
+      // Delete old file if it exists
+      if (existingSong.audio_url_choir_alto) {
+        await deleteFile(existingSong.audio_url_choir_alto)
+      }
+      const filename = generateUniqueFilename(audioChoirAltoFile.name)
+      updateData.audio_url_choir_alto = await saveFile(
+        audioChoirAltoFile,
+        "songs",
+        filename
+      )
+    }
+
+    // Handle choir sopranes audio file update
+    if (audioChoirSopranesFile && audioChoirSopranesFile.size > 0) {
+      // Delete old file if it exists
+      if (existingSong.audio_url_choir_sopranes) {
+        await deleteFile(existingSong.audio_url_choir_sopranes)
+      }
+      const filename = generateUniqueFilename(audioChoirSopranesFile.name)
+      updateData.audio_url_choir_sopranes = await saveFile(
+        audioChoirSopranesFile,
+        "songs",
+        filename
+      )
+    }
+
+    // Handle video file update
+    if (videoFile && videoFile.size > 0) {
+      // Delete old file if it exists
+      if (existingSong.video_url) {
+        await deleteFile(existingSong.video_url)
+      }
+      const filename = generateUniqueFilename(videoFile.name)
+      updateData.video_url = await saveFile(videoFile, "video", filename)
+    }
+
+    // Handle lyrics file update
+    if (lyricsFile && lyricsFile.size > 0) {
+      // Delete old file if it exists
+      if (existingSong.lyrics_url) {
+        await deleteFile(existingSong.lyrics_url)
+      }
+      const filename = generateUniqueFilename(lyricsFile.name)
+      updateData.lyrics_url = await saveFile(lyricsFile, "documents", filename)
+    }
+
+    // Handle choir lyrics file update
+    if (lyricsChoirFile && lyricsChoirFile.size > 0) {
+      // Delete old file if it exists
+      if (existingSong.lyrics_url_choir) {
+        await deleteFile(existingSong.lyrics_url_choir)
+      }
+      const filename = generateUniqueFilename(lyricsChoirFile.name)
+      updateData.lyrics_url_choir = await saveFile(
+        lyricsChoirFile,
+        "documents",
+        filename
+      )
+    }
+
+    const song = await updateSong(id, updateData)
+
+    return NextResponse.json({ success: true, song }, { status: 200 })
+  } catch (error) {
+    console.error("Error updating song:", error)
+    return NextResponse.json(
+      {
+        error: "Failed to update song",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    )
+  }
+}
+
 export async function DELETE(req: NextRequest) {
   try {
     const { id } = await req.json()
@@ -200,23 +375,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     for (const filePath of filesToDelete) {
-      try {
-        let relativePath = filePath.startsWith("/")
-          ? filePath.slice(1)
-          : filePath
-
-        if (relativePath.startsWith("api/uploads/")) {
-          relativePath = relativePath.replace("api/uploads/", "uploads/")
-        }
-
-        const absolutePath = join(process.cwd(), "public", relativePath)
-
-        if (existsSync(absolutePath)) {
-          await unlink(absolutePath)
-        }
-      } catch (fileError) {
-        console.error(`Failed to delete file ${filePath}:`, fileError)
-      }
+      await deleteFile(filePath)
     }
 
     await deleteSong(id)

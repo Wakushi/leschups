@@ -45,9 +45,7 @@ export async function getSongById(id: number): Promise<Song | null> {
   return song as Song
 }
 
-export async function createSong(
-  songData: Omit<Song, "id">
-): Promise<Song> {
+export async function createSong(songData: Omit<Song, "id">): Promise<Song> {
   const insertData: any = {
     ...songData,
     lyrics_html: songData.lyrics_html
@@ -66,6 +64,44 @@ export async function createSong(
 
   if (error) throw error
   return data as Song
+}
+
+export async function updateSong(
+  id: number,
+  songData: Partial<Omit<Song, "id">>
+): Promise<Song> {
+  const updateData: any = {
+    ...songData,
+    lyrics_html: songData.lyrics_html
+      ? JSON.stringify(songData.lyrics_html)
+      : undefined,
+    lyrics_html_choir: songData.lyrics_html_choir
+      ? JSON.stringify(songData.lyrics_html_choir)
+      : undefined,
+  }
+
+  Object.keys(updateData).forEach(
+    (key) => updateData[key] === undefined && delete updateData[key]
+  )
+
+  const { data, error } = await supabase
+    .from(Collection.SONGS)
+    .update(updateData)
+    .eq("id", id)
+    .select()
+    .single()
+
+  if (error) throw error
+
+  const song = {
+    ...data,
+    lyrics_html: data.lyrics_html ? JSON.parse(data.lyrics_html) : null,
+    lyrics_html_choir: data.lyrics_html_choir
+      ? JSON.parse(data.lyrics_html_choir)
+      : null,
+  }
+
+  return song as Song
 }
 
 export async function deleteSong(id: number): Promise<void> {

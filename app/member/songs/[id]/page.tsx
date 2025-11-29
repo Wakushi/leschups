@@ -12,7 +12,7 @@ import { LyricsSection } from "@/components/pages/member/song/lyrics-section"
 import { SingerBadges } from "@/components/pages/member/song/singer-badges"
 import DownloadButton from "@/components/ui/download-button"
 import { useSongs } from "@/providers/songs-store"
-import { SongAudio, SongAudioType } from "@/types/song.type"
+import { Song, SongAudio, SongAudioType } from "@/types/song.type"
 import { getAudioDuration } from "@/lib/utils"
 import { AudioPlayer } from "@/components/pages/member/song/audio-player"
 
@@ -20,8 +20,7 @@ export default function SongDetailPage() {
   const params = useParams()
   const { getSongById, loadingSongs } = useSongs()
 
-  const song = getSongById(Number(params?.id))
-
+  const [song, setSong] = useState<Song | null>(null)
   const [songAudios, setSongAudios] = useState<SongAudio[]>([])
   const [playingSong, setPlayingSong] = useState<SongAudio | null>(null)
 
@@ -29,57 +28,81 @@ export default function SongDetailPage() {
 
   useEffect(() => {
     async function loadSongsAudio() {
-      setLoading(true)
+      try {
+        setLoading(true)
 
-      if (!song) return
+        const song = await getSongById(Number(params?.id))
 
-      const loadedSongAudios: SongAudio[] = []
+        if (!song) {
+          setLoading(false)
+          return
+        }
 
-      if (song.audio_url) {
-        const audio = new Audio(song.audio_url)
-        const duration = await getAudioDuration(audio)
+        const t0 = Date.now()
 
-        loadedSongAudios.push({
-          audio,
-          audio_url: song.audio_url,
-          duration,
-          isPlaying: false,
-          type: SongAudioType.INSTRUMENTAL,
-        })
+        const durationsToCompute: {
+          url: string
+          type: SongAudioType
+          promise: Promise<number>
+        }[] = []
+
+        if (song.audio_url) {
+          durationsToCompute.push({
+            url: song.audio_url,
+            type: SongAudioType.INSTRUMENTAL,
+            promise: getAudioDuration(new Audio(song.audio_url)),
+          })
+        }
+
+        if (song.audio_url_choir_alto) {
+          durationsToCompute.push({
+            url: song.audio_url_choir_alto,
+            type: SongAudioType.CHOIR_ALTO,
+            promise: getAudioDuration(new Audio(song.audio_url_choir_alto)),
+          })
+        }
+
+        if (song.audio_url_choir_sopranes) {
+          durationsToCompute.push({
+            url: song.audio_url_choir_sopranes,
+            type: SongAudioType.CHOIR_SOPRANES,
+            promise: getAudioDuration(new Audio(song.audio_url_choir_sopranes)),
+          })
+        }
+
+        const durations = await Promise.all(
+          durationsToCompute.map(({ url, type, promise }) =>
+            promise.then((duration) => ({ url, type, duration }))
+          )
+        )
+
+        const loadedSongAudios: SongAudio[] = durations.map(
+          ({ url, type, duration }) => ({
+            audio: new Audio(url),
+            audio_url: url,
+            duration,
+            isPlaying: false,
+            type,
+          })
+        )
+
+        console.log(
+          `Loaded ${loadedSongAudios.length} audio${
+            durations.length > 1 ? "s" : ""
+          } for song ${params?.id} in ${Date.now() - t0}ms`
+        )
+
+        setSong(song)
+        setSongAudios(loadedSongAudios)
+      } catch (error) {
+        console.error(`Failed to load song ${params?.id}`, error)
+      } finally {
+        setLoading(false)
       }
-
-      if (song.audio_url_choir_alto) {
-        const audio = new Audio(song.audio_url_choir_alto)
-        const duration = await getAudioDuration(audio)
-
-        loadedSongAudios.push({
-          audio,
-          audio_url: song.audio_url_choir_alto,
-          duration,
-          isPlaying: false,
-          type: SongAudioType.CHOIR_ALTO,
-        })
-      }
-
-      if (song.audio_url_choir_sopranes) {
-        const audio = new Audio(song.audio_url_choir_sopranes)
-        const duration = await getAudioDuration(audio)
-
-        loadedSongAudios.push({
-          audio,
-          audio_url: song.audio_url_choir_sopranes,
-          duration,
-          isPlaying: false,
-          type: SongAudioType.CHOIR_SOPRANES,
-        })
-      }
-
-      setSongAudios(loadedSongAudios)
-      setLoading(false)
     }
 
     loadSongsAudio()
-  }, [])
+  }, [loadingSongs])
 
   function handlePlaySong(songAudio?: SongAudio): void {
     if (!songAudio) return
@@ -216,7 +239,6 @@ export default function SongDetailPage() {
                     <LyricsSection
                       lyricsHtml={song.lyrics_html}
                       lyricsUrl={song.lyrics_url}
-                      title={song.title}
                       label="Paroles - Lead"
                       downloadLabel="Télécharger"
                     />
@@ -255,7 +277,6 @@ export default function SongDetailPage() {
                     <LyricsSection
                       lyricsHtml={song.lyrics_html_choir}
                       lyricsUrl={song.lyrics_url_choir}
-                      title={song.title}
                       label="Paroles - Chœur"
                       downloadLabel="Télécharger"
                     />

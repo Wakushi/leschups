@@ -6,7 +6,6 @@ import { Download, FileText } from "lucide-react"
 interface LyricsSectionProps {
   lyricsHtml?: { __html: string | TrustedHTML }
   lyricsUrl?: string
-  title: string
   label: string
   downloadLabel: string
 }
@@ -14,7 +13,6 @@ interface LyricsSectionProps {
 export function LyricsSection({
   lyricsHtml,
   lyricsUrl,
-  title,
   label,
   downloadLabel,
 }: LyricsSectionProps) {

@@ -14,7 +14,7 @@ export type Song = {
   lyrics_html?: { __html: string | TrustedHTML } // Visualize in the app
   lyrics_url_choir?: string
   lyrics_html_choir?: { __html: string | TrustedHTML }
-  audio_url: string
+  audio_url?: string
   audio_url_choir_alto?: string
   audio_url_choir_sopranes?: string
   video_url?: string

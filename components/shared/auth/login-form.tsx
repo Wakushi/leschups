@@ -43,8 +43,6 @@ export default function LoginForm() {
     try {
       const { email, password } = formValues
 
-      console.log(email, password)
-
       await login(email, password)
     } catch (error) {
       console.error(error)

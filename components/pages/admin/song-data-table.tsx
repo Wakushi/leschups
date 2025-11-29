@@ -184,7 +184,6 @@ export function SongDataTable<TData extends Song, TValue>({
   )
 }
 
-// Define column labels based on the actual column IDs
 const columnsLabels: Record<string, string> = {
   title: "Titre",
   artist: "Artiste",

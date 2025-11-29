@@ -14,18 +14,18 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
+import { Song } from "@/types/song.type"
 
-const formSchema = z.object({
+const baseFormSchema = {
   title: z.string().min(1, { message: "Le titre est requis." }),
   artist: z.string().min(1, { message: "L'artiste est requis." }),
   leads: z.string().optional(),
   choirs: z.string().optional(),
   lyrics_html: z.string().optional(),
   lyrics_html_choir: z.string().optional(),
-  audio_url: z.instanceof(File, { message: "Le fichier audio est requis." }),
   audio_url_choir_alto: z.union([z.instanceof(File), z.literal("")]).optional(),
   audio_url_choir_sopranes: z
     .union([z.instanceof(File), z.literal("")])
@@ -33,37 +33,89 @@ const formSchema = z.object({
   video_url: z.union([z.instanceof(File), z.literal("")]).optional(),
   lyrics_url: z.union([z.instanceof(File), z.literal("")]).optional(),
   lyrics_url_choir: z.union([z.instanceof(File), z.literal("")]).optional(),
+}
+
+const createFormSchema = z.object({
+  ...baseFormSchema,
+  audio_url: z.instanceof(File, { message: "Le fichier audio est requis." }),
 })
 
-type FormValues = z.infer<typeof formSchema>
+const editFormSchema = z.object({
+  ...baseFormSchema,
+  audio_url: z.union([z.instanceof(File), z.literal("")]).optional(),
+})
+
+// Use edit schema type as it's more permissive (compatible with both)
+type FormValues = z.infer<typeof editFormSchema>
 
 interface SongFormProps {
   onSuccess?: () => void
+  song?: Song
 }
 
-export default function SongForm({ onSuccess }: SongFormProps) {
+export default function SongForm({ onSuccess, song }: SongFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const isEditMode = !!song
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(
+      isEditMode ? editFormSchema : createFormSchema
+    ) as any,
     defaultValues: {
-      title: "",
-      artist: "",
-      leads: "",
-      choirs: "",
-      lyrics_html: "",
-      lyrics_html_choir: "",
-    },
+      title: song?.title || "",
+      artist: song?.artist || "",
+      leads: song?.leads?.join(", ") || "",
+      choirs: song?.choirs?.join(", ") || "",
+      lyrics_html:
+        song?.lyrics_html &&
+        typeof song.lyrics_html === "object" &&
+        "__html" in song.lyrics_html
+          ? String(song.lyrics_html.__html)
+          : "",
+      lyrics_html_choir:
+        song?.lyrics_html_choir &&
+        typeof song.lyrics_html_choir === "object" &&
+        "__html" in song.lyrics_html_choir
+          ? String(song.lyrics_html_choir.__html)
+          : "",
+    } as FormValues,
   })
+
+  // Update form when song prop changes
+  useEffect(() => {
+    if (song) {
+      form.reset({
+        title: song.title || "",
+        artist: song.artist || "",
+        leads: song.leads?.join(", ") || "",
+        choirs: song.choirs?.join(", ") || "",
+        lyrics_html:
+          song.lyrics_html &&
+          typeof song.lyrics_html === "object" &&
+          "__html" in song.lyrics_html
+            ? String(song.lyrics_html.__html)
+            : "",
+        lyrics_html_choir:
+          song.lyrics_html_choir &&
+          typeof song.lyrics_html_choir === "object" &&
+          "__html" in song.lyrics_html_choir
+            ? String(song.lyrics_html_choir.__html)
+            : "",
+      })
+    }
+  }, [song, form])
 
   async function onSubmit(formValues: FormValues) {
     setIsSubmitting(true)
 
     try {
-      // Calculate duration from audio file
-
       // Create FormData for file upload
       const formData = new FormData()
+
+      if (isEditMode && song) {
+        formData.append("id", song.id.toString())
+      }
+
       formData.append("title", formValues.title)
       formData.append("artist", formValues.artist)
       formData.append("leads", formValues.leads || "")
@@ -76,8 +128,10 @@ export default function SongForm({ onSuccess }: SongFormProps) {
         formData.append("lyrics_html_choir", formValues.lyrics_html_choir)
       }
 
-      // Append files
-      formData.append("audio_url", formValues.audio_url)
+      // Append files (only if they are File instances)
+      if (formValues.audio_url && formValues.audio_url instanceof File) {
+        formData.append("audio_url", formValues.audio_url)
+      }
 
       if (
         formValues.audio_url_choir_alto &&
@@ -112,25 +166,35 @@ export default function SongForm({ onSuccess }: SongFormProps) {
       }
 
       const response = await fetch("/api/songs", {
-        method: "POST",
+        method: isEditMode ? "PUT" : "POST",
         body: formData,
       })
 
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to create song")
+        throw new Error(
+          data.error || `Failed to ${isEditMode ? "update" : "create"} song`
+        )
       }
 
-      toast.success("Chanson créée avec succès!")
-      form.reset()
+      toast.success(
+        isEditMode
+          ? "Chanson modifiée avec succès!"
+          : "Chanson créée avec succès!"
+      )
+      if (!isEditMode) {
+        form.reset()
+      }
       onSuccess?.()
     } catch (error) {
       console.error(error)
       toast.error(
         error instanceof Error
           ? error.message
-          : "Une erreur est survenue lors de la création de la chanson."
+          : `Une erreur est survenue lors de la ${
+              isEditMode ? "modification" : "création"
+            } de la chanson.`
       )
     } finally {
       setIsSubmitting(false)
@@ -145,10 +209,12 @@ export default function SongForm({ onSuccess }: SongFormProps) {
       >
         <div className="text-start mb-2">
           <h2 className="text-2xl font-bold text-gray-800">
-            Créer une nouvelle chanson
+            {isEditMode ? "Modifier la chanson" : "Créer une nouvelle chanson"}
           </h2>
           <p className="text-sm text-gray-600 mt-1">
-            Remplissez le formulaire ci-dessous pour ajouter une chanson
+            {isEditMode
+              ? "Modifiez les informations de la chanson ci-dessous"
+              : "Remplissez le formulaire ci-dessous pour ajouter une chanson"}
           </p>
         </div>
 
@@ -293,8 +359,8 @@ export default function SongForm({ onSuccess }: SongFormProps) {
             render={({ field: { value, onChange, ...field } }) => (
               <FormItem>
                 <FormLabel className="text-gray-700 font-medium">
-                  Fichier audio principal{" "}
-                  <span className="text-red-500">*</span>
+                  Fichier audio principal
+                  {!isEditMode && <span className="text-red-500"> *</span>}
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -304,10 +370,15 @@ export default function SongForm({ onSuccess }: SongFormProps) {
                     {...field}
                     onChange={(e) => {
                       const file = e.target.files?.[0]
-                      onChange(file)
+                      onChange(file || "")
                     }}
                   />
                 </FormControl>
+                {isEditMode && song?.audio_url && (
+                  <p className="text-xs text-gray-500">
+                    Fichier actuel: {song.audio_url.split("/").pop()}
+                  </p>
+                )}
                 <FormMessage className="text-red-500 text-xs" />
               </FormItem>
             )}
@@ -457,8 +528,10 @@ export default function SongForm({ onSuccess }: SongFormProps) {
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Création en cours...
+              {isEditMode ? "Modification en cours..." : "Création en cours..."}
             </>
+          ) : isEditMode ? (
+            "Modifier la chanson"
           ) : (
             "Créer la chanson"
           )}
