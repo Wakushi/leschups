@@ -220,7 +220,7 @@ export default function SongDetailPage() {
           <CardContent className="flex flex-col gap-4">
             <div className="flex flex-col md:flex-row justify-between gap-4">
               {/* Main Song Section */}
-              <section className="space-y-6">
+              <section className="space-y-6 w-1/2">
                 <SongSection
                   songAudio={getSongAudio(SongAudioType.INSTRUMENTAL)}
                   isPlaying={
@@ -240,14 +240,14 @@ export default function SongDetailPage() {
                       lyricsHtml={song.lyrics_html}
                       lyricsUrl={song.lyrics_url}
                       label="Paroles - Lead"
-                      downloadLabel="Télécharger"
+                      downloadLabel="Télécharger paroles"
                     />
                   </>
                 )}
               </section>
 
               {/* Choir Song Section */}
-              <section className="space-y-6">
+              <section className="space-y-6 w-1/2">
                 <SongSection
                   songAudio={getSongAudio(SongAudioType.CHOIR_ALTO)}
                   isPlaying={
@@ -278,7 +278,7 @@ export default function SongDetailPage() {
                       lyricsHtml={song.lyrics_html_choir}
                       lyricsUrl={song.lyrics_url_choir}
                       label="Paroles - Chœur"
-                      downloadLabel="Télécharger"
+                      downloadLabel="Télécharger paroles"
                     />
                   </>
                 )}
@@ -315,7 +315,7 @@ function SongSection({
     <div className="space-y-3">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-          <Music className="h-4 w-4 text-emerald-600" />
+          <Music className="h-4 w-4 text-main" />
           <span>{label}</span>
         </div>
         <DownloadButton url={songAudio.audio_url} text="Télécharger MP3" />
