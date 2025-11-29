@@ -187,7 +187,12 @@ export default function SongDetailPage() {
         </Link>
 
         {/* Main Card */}
-        <Card className="bg-white border-emerald-100/20 shadow-lg">
+        <Card
+          className="bg-white border-emerald-100/20 shadow-lg"
+          onClick={() => {
+            console.log(song)
+          }}
+        >
           <CardHeader className="pb-4 md:pb-6">
             <CardTitle className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               {song.title}
@@ -234,7 +239,7 @@ export default function SongDetailPage() {
                 />
 
                 {/* Lead Lyrics */}
-                {song.lyrics_html && (
+                {song.lyrics_html?.__html && (
                   <>
                     <LyricsSection
                       lyricsHtml={song.lyrics_html}
@@ -272,7 +277,7 @@ export default function SongDetailPage() {
                   label="Écouter - Chœur Sopranes"
                 />
 
-                {song.lyrics_html_choir && (
+                {song.lyrics_html_choir?.__html && (
                   <>
                     <LyricsSection
                       lyricsHtml={song.lyrics_html_choir}

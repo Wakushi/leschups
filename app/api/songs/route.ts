@@ -134,52 +134,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-async function saveFile(
-  file: File,
-  directory: string,
-  filename: string
-): Promise<string> {
-  const uploadDir = join(process.cwd(), "public", "uploads", directory)
-
-  if (!existsSync(uploadDir)) {
-    await mkdir(uploadDir, { recursive: true })
-  }
-
-  const filePath = join(uploadDir, filename)
-  const bytes = await file.arrayBuffer()
-  const buffer = Buffer.from(bytes)
-
-  await writeFile(filePath, buffer)
-  return `/api/uploads/${directory}/${filename}`
-}
-
-function generateUniqueFilename(originalName: string): string {
-  const timestamp = Date.now()
-  const randomStr = Math.random().toString(36).substring(2, 9)
-  const extension = originalName.split(".").pop()
-  const nameWithoutExt = originalName.replace(/\.[^/.]+$/, "")
-  const sanitizedName = nameWithoutExt.replace(/[^a-zA-Z0-9]/g, "_")
-  return `${sanitizedName}_${timestamp}_${randomStr}.${extension}`
-}
-
-async function deleteFile(filePath: string): Promise<void> {
-  try {
-    let relativePath = filePath.startsWith("/") ? filePath.slice(1) : filePath
-
-    if (relativePath.startsWith("api/uploads/")) {
-      relativePath = relativePath.replace("api/uploads/", "uploads/")
-    }
-
-    const absolutePath = join(process.cwd(), "public", relativePath)
-
-    if (existsSync(absolutePath)) {
-      await unlink(absolutePath)
-    }
-  } catch (fileError) {
-    console.error(`Failed to delete file ${filePath}:`, fileError)
-  }
-}
-
 export async function PUT(req: NextRequest) {
   try {
     const formData = await req.formData()
@@ -243,15 +197,11 @@ export async function PUT(req: NextRequest) {
       artist,
       leads,
       choirs,
-      lyrics_html: lyricsHtml ? { __html: lyricsHtml } : undefined,
-      lyrics_html_choir: lyricsHtmlChoir
-        ? { __html: lyricsHtmlChoir }
-        : undefined,
+      lyrics_html: { __html: lyricsHtml ? lyricsHtml : "" },
+      lyrics_html_choir: { __html: lyricsHtmlChoir ? lyricsHtmlChoir : "" },
     }
 
-    // Handle audio file update
     if (audioFile && audioFile.size > 0) {
-      // Delete old file
       if (existingSong.audio_url) {
         await deleteFile(existingSong.audio_url)
       }
@@ -259,9 +209,7 @@ export async function PUT(req: NextRequest) {
       updateData.audio_url = await saveFile(audioFile, "songs", audioFilename)
     }
 
-    // Handle choir alto audio file update
     if (audioChoirAltoFile && audioChoirAltoFile.size > 0) {
-      // Delete old file if it exists
       if (existingSong.audio_url_choir_alto) {
         await deleteFile(existingSong.audio_url_choir_alto)
       }
@@ -273,9 +221,7 @@ export async function PUT(req: NextRequest) {
       )
     }
 
-    // Handle choir sopranes audio file update
     if (audioChoirSopranesFile && audioChoirSopranesFile.size > 0) {
-      // Delete old file if it exists
       if (existingSong.audio_url_choir_sopranes) {
         await deleteFile(existingSong.audio_url_choir_sopranes)
       }
@@ -287,9 +233,7 @@ export async function PUT(req: NextRequest) {
       )
     }
 
-    // Handle video file update
     if (videoFile && videoFile.size > 0) {
-      // Delete old file if it exists
       if (existingSong.video_url) {
         await deleteFile(existingSong.video_url)
       }
@@ -297,9 +241,7 @@ export async function PUT(req: NextRequest) {
       updateData.video_url = await saveFile(videoFile, "video", filename)
     }
 
-    // Handle lyrics file update
     if (lyricsFile && lyricsFile.size > 0) {
-      // Delete old file if it exists
       if (existingSong.lyrics_url) {
         await deleteFile(existingSong.lyrics_url)
       }
@@ -307,9 +249,7 @@ export async function PUT(req: NextRequest) {
       updateData.lyrics_url = await saveFile(lyricsFile, "documents", filename)
     }
 
-    // Handle choir lyrics file update
     if (lyricsChoirFile && lyricsChoirFile.size > 0) {
-      // Delete old file if it exists
       if (existingSong.lyrics_url_choir) {
         await deleteFile(existingSong.lyrics_url_choir)
       }
@@ -390,5 +330,51 @@ export async function DELETE(req: NextRequest) {
       },
       { status: 500 }
     )
+  }
+}
+
+async function saveFile(
+  file: File,
+  directory: string,
+  filename: string
+): Promise<string> {
+  const uploadDir = join(process.cwd(), "public", "uploads", directory)
+
+  if (!existsSync(uploadDir)) {
+    await mkdir(uploadDir, { recursive: true })
+  }
+
+  const filePath = join(uploadDir, filename)
+  const bytes = await file.arrayBuffer()
+  const buffer = Buffer.from(bytes)
+
+  await writeFile(filePath, buffer)
+  return `/api/uploads/${directory}/${filename}`
+}
+
+function generateUniqueFilename(originalName: string): string {
+  const timestamp = Date.now()
+  const randomStr = Math.random().toString(36).substring(2, 9)
+  const extension = originalName.split(".").pop()
+  const nameWithoutExt = originalName.replace(/\.[^/.]+$/, "")
+  const sanitizedName = nameWithoutExt.replace(/[^a-zA-Z0-9]/g, "_")
+  return `${sanitizedName}_${timestamp}_${randomStr}.${extension}`
+}
+
+async function deleteFile(filePath: string): Promise<void> {
+  try {
+    let relativePath = filePath.startsWith("/") ? filePath.slice(1) : filePath
+
+    if (relativePath.startsWith("api/uploads/")) {
+      relativePath = relativePath.replace("api/uploads/", "uploads/")
+    }
+
+    const absolutePath = join(process.cwd(), "public", relativePath)
+
+    if (existsSync(absolutePath)) {
+      await unlink(absolutePath)
+    }
+  } catch (fileError) {
+    console.error(`Failed to delete file ${filePath}:`, fileError)
   }
 }
