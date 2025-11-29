@@ -109,7 +109,6 @@ export default function SongForm({ onSuccess, song }: SongFormProps) {
     setIsSubmitting(true)
 
     try {
-      // Create FormData for file upload
       const formData = new FormData()
 
       if (isEditMode && song) {
@@ -120,15 +119,9 @@ export default function SongForm({ onSuccess, song }: SongFormProps) {
       formData.append("artist", formValues.artist)
       formData.append("leads", formValues.leads || "")
       formData.append("choirs", formValues.choirs || "")
+      formData.append("lyrics_html", formValues.lyrics_html || "")
+      formData.append("lyrics_html_choir", formValues.lyrics_html_choir || "")
 
-      if (formValues.lyrics_html) {
-        formData.append("lyrics_html", formValues.lyrics_html)
-      }
-      if (formValues.lyrics_html_choir) {
-        formData.append("lyrics_html_choir", formValues.lyrics_html_choir)
-      }
-
-      // Append files (only if they are File instances)
       if (formValues.audio_url && formValues.audio_url instanceof File) {
         formData.append("audio_url", formValues.audio_url)
       }
