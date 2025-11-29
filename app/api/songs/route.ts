@@ -45,9 +45,9 @@ export async function POST(req: NextRequest) {
     const lyricsFile = formData.get("lyrics_url") as File | null
     const lyricsChoirFile = formData.get("lyrics_url_choir") as File | null
 
-    if (!title || !artist || !audioFile) {
+    if (!title || !artist) {
       return NextResponse.json(
-        { error: "Title, artist, and audio file are required" },
+        { error: "Title and artist are required" },
         { status: 400 }
       )
     }
@@ -65,8 +65,11 @@ export async function POST(req: NextRequest) {
           .filter(Boolean)
       : []
 
-    const audioFilename = generateUniqueFilename(audioFile.name)
-    const audioUrl = await saveFile(audioFile, "songs", audioFilename)
+    let audioUrl: string | undefined
+    if (audioFile && audioFile.size > 0) {
+      const audioFilename = generateUniqueFilename(audioFile.name)
+      audioUrl = await saveFile(audioFile, "songs", audioFilename)
+    }
 
     let audioUrlChoirAlto: string | undefined
     if (audioChoirAltoFile) {

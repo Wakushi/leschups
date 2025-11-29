@@ -37,7 +37,7 @@ const baseFormSchema = {
 
 const createFormSchema = z.object({
   ...baseFormSchema,
-  audio_url: z.instanceof(File, { message: "Le fichier audio est requis." }),
+  audio_url: z.union([z.instanceof(File), z.literal("")]).optional(),
 })
 
 const editFormSchema = z.object({
@@ -45,7 +45,6 @@ const editFormSchema = z.object({
   audio_url: z.union([z.instanceof(File), z.literal("")]).optional(),
 })
 
-// Use edit schema type as it's more permissive (compatible with both)
 type FormValues = z.infer<typeof editFormSchema>
 
 interface SongFormProps {
@@ -81,7 +80,6 @@ export default function SongForm({ onSuccess, song }: SongFormProps) {
     } as FormValues,
   })
 
-  // Update form when song prop changes
   useEffect(() => {
     if (song) {
       form.reset({
@@ -353,7 +351,6 @@ export default function SongForm({ onSuccess, song }: SongFormProps) {
               <FormItem>
                 <FormLabel className="text-gray-700 font-medium">
                   Fichier audio principal
-                  {!isEditMode && <span className="text-red-500"> *</span>}
                 </FormLabel>
                 <FormControl>
                   <Input
