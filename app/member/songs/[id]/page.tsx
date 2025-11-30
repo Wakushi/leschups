@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -25,6 +25,21 @@ export default function SongDetailPage() {
   const [playingSong, setPlayingSong] = useState<SongAudio | null>(null)
 
   const [loading, setLoading] = useState(false)
+
+  const playingSongRef = useRef<SongAudio | null>(null)
+
+  useEffect(() => {
+    playingSongRef.current = playingSong
+  }, [playingSong])
+
+  useEffect(() => {
+    return () => {
+      if (playingSongRef.current?.audio) {
+        playingSongRef.current.audio.pause()
+        playingSongRef.current.audio.currentTime = 0
+      }
+    }
+  }, [])
 
   useEffect(() => {
     async function loadSongsAudio() {
@@ -84,12 +99,6 @@ export default function SongDetailPage() {
             isPlaying: false,
             type,
           })
-        )
-
-        console.log(
-          `Loaded ${loadedSongAudios.length} audio${
-            durations.length > 1 ? "s" : ""
-          } for song ${params?.id} in ${Date.now() - t0}ms`
         )
 
         setSong(song)
