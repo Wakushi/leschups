@@ -183,7 +183,7 @@ export default function SongDetailPage() {
 
   return (
     <div className="min-h-screen pt-20 bg-main relative pb-12">
-      <div className="container mx-auto px-4 py-6 md:py-8 max-w-5xl">
+      <div className="container mx-auto md:px-4 py-6 md:py-8 max-w-5xl">
         {/* Back Button */}
         <Link href="/member/songs">
           <Button
@@ -234,7 +234,7 @@ export default function SongDetailPage() {
           <CardContent className="flex flex-col gap-4">
             <div className="flex flex-col md:flex-row justify-between gap-4">
               {/* Main Song Section */}
-              <section className="space-y-6 w-1/2">
+              <section className="space-y-6 md:w-1/2">
                 <SongSection
                   songAudio={getSongAudio(SongAudioType.INSTRUMENTAL)}
                   isPlaying={
@@ -261,7 +261,7 @@ export default function SongDetailPage() {
               </section>
 
               {/* Choir Song Section */}
-              <section className="space-y-6 w-1/2">
+              <section className="space-y-6 md:w-1/2">
                 <SongSection
                   songAudio={getSongAudio(SongAudioType.CHOIR_ALTO)}
                   isPlaying={
