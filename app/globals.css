@@ -156,9 +156,11 @@ li {
 
 .bg-hero {
   background: no-repeat center url("/images/background/hero-bg.jpg");
+  background-size: cover;
 }
 
-.bg-hero {
+.bg-wood {
+  background: no-repeat center url("/images/background/wood-bg.jpg");
   background-size: cover;
 }
 
